@@ -22,55 +22,83 @@ namespace Assets.Scrypts.LevelManagerSystem
     }
     class LevelData
     {
-        private static LevelData levelData;
-        public static LevelData Data
+        private static LevelData _levelData;
+        public static LevelData levelData
         {
             get
             {
-                if (levelData == null)
-                    levelData = new LevelData();
-                return levelData;
+                if (_levelData == null)
+                    _levelData = new LevelData();
+                return _levelData;
             }
             set
             {
-                levelData = value;
+                _levelData = value;
             }
         }
 
-        public readonly char[] symbols;
+        public readonly string[] symbols;
+        public readonly Dictionary<string, Sprite> symbolSprites; 
         public readonly LevelType levelType;
-        public readonly LongReactiveProperty coins, crystals;
-        public readonly IntReactiveProperty enemyCount, shelterCount;
-        public long Coins { get => coins.Value; set => coins.SetValueAndForceNotify(value); }
-        public long Crystals { get => crystals.Value; set => crystals.SetValueAndForceNotify(value); }
+        public readonly LongReactiveProperty[] valutes;
+        public readonly IntReactiveProperty enemyCount, fortressCount;
+        public long Coins { get => valutes[(int)ValutType.Coin].Value; set => valutes[(int)ValutType.Coin].SetValueAndForceNotify(value); }
+        public long Crystals { get => valutes[(int)ValutType.Crystal].Value; set => valutes[(int)ValutType.Crystal].SetValueAndForceNotify(value); }
         public readonly PathManager shelterPath;
 
+        public Sprite GetSpriteOf(string symbolName) =>
+            symbolSprites[symbolName];
+
+        public Vector2 GetClosestFortress(Vector2 startPoint) =>
+            shelterPath.ClosestFortress(startPoint);
         public Vector2[] GetNodesForPath(Vector2 startPoint) =>
             shelterPath.SearchPath(startPoint);
 
+        public void AddValute(ValutType valutType, long add) =>
+            valutes[(int)valutType].Value += add;
+        public void SubscribeOnValut(ValutType valutType, Action<long> onChange) =>
+            valutes[(int)valutType].Subscribe(onChange);
+
         private LevelData()
         {
-            coins = new LongReactiveProperty(0);
-            crystals = new LongReactiveProperty(0);
+            valutes = new LongReactiveProperty[2];
+            foreach(ValutType valutType in Enum.GetValues(typeof(ValutType)))
+                valutes[(int)valutType] = new LongReactiveProperty(0);
 
             enemyCount = new IntReactiveProperty(0);
-            enemyCount = new IntReactiveProperty(0);
+            fortressCount = new IntReactiveProperty(0);
 
-            symbols = new char[1] { 'a' };
+            symbols = new string[] { "a" };
             levelType = LevelType.Normal;
         }
         private LevelData(LevelPreset levelPreset, Vector2[] points)
         {
-            symbols = levelPreset.Symbols;
+            symbols = levelPreset.Symbols.Clone() as string[];
+            symbolSprites = new Dictionary<string, Sprite>();
+            Sprite[] sprites = Resources.LoadAll<Sprite>("SymbolLists/SymbolSprites");
+
+            for(int i = 0; i < symbols.Length; i++)
+            {
+                foreach(Sprite sprite in sprites)
+                    if (sprite.name.Equals(symbols[i]))
+                    {
+                        symbols[i] = symbols[i].ToLower();
+                        Debug.Log(symbols[i]);
+                        symbolSprites.Add(symbols[i], sprite);
+                        break;
+                    }
+            }
+                    
             levelType = levelPreset.levelType;
 
-            coins = new LongReactiveProperty(0);
-            crystals = new LongReactiveProperty(0);
+            valutes = new LongReactiveProperty[2];
+            foreach (ValutType valutType in Enum.GetValues(typeof(ValutType)))
+                valutes[(int)valutType] = new LongReactiveProperty(0);
 
             shelterPath = new PathManager(points);
 
             enemyCount = new IntReactiveProperty(levelPreset.unitsInfos.Length);
-            shelterCount = new IntReactiveProperty(1);
+            fortressCount = new IntReactiveProperty(1);
         }
         public static void InitData(LevelPreset levelPreset, Vector2[] points) =>
             levelData = new LevelData(levelPreset, points);

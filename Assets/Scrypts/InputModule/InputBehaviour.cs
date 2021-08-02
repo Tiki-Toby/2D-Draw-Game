@@ -5,10 +5,12 @@ namespace Assets.Scrypts.InputModule
 {
     public abstract class InputBehaviour : MonoBehaviour
     {
-        [SerializeField] static UnityEvent<char> onSymbolInput = new UnityEvent<char>();
-        public static void Subscribe(UnityAction<char> sub) => onSymbolInput.AddListener(sub);
-        public static void UnSubscribe(UnityAction<char> sub) => onSymbolInput.RemoveListener(sub);
-        public void OnSymbolInput() => onSymbolInput.Invoke(InputSymbol());
-        protected abstract char InputSymbol();
+        //собыьте ввода символа
+        [SerializeField] static UnityEvent<string> onSymbolInput = new UnityEvent<string>();
+        public static void Subscribe(UnityAction<string> sub) => onSymbolInput.AddListener(sub);
+        public static void UnSubscribe(UnityAction<string> sub) => onSymbolInput.RemoveListener(sub);
+        //вызывается в наследниках при вводе символа
+        protected void OnSymbolInput() => onSymbolInput.Invoke(InputSymbol().ToLower());
+        protected abstract string InputSymbol();
     }
 }

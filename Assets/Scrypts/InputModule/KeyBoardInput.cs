@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Assets.Scrypts.LevelManagerSystem;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Assets.Scrypts.InputModule
 {
     public class KeyBoardInput : InputBehaviour
     {
-        protected override char InputSymbol()
+        protected override string InputSymbol()
         {
-            return Input.inputString[0];
+            return Input.inputString.ToString();
         }
         void Update()
         {
             if (Input.anyKeyDown)
-                OnSymbolInput();
+                if(LevelData.levelData.symbols.Contains(Input.inputString.ToLower()))
+                    OnSymbolInput();
         }
     }
 }

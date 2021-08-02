@@ -1,7 +1,5 @@
-﻿using Assets.Scrypts.Entity;
-using Assets.Scrypts.InputModule;
-using System;
-using System.Collections.Generic;
+﻿using Assets.Scrypts.Enemy;
+using Assets.Scrypts.GameData;
 using UniRx;
 using UnityEngine;
 
@@ -9,29 +7,37 @@ namespace Assets.Scrypts.LevelManagerSystem
 {
     class LevelManager : MonoBehaviour
     {
-        [SerializeField] Animator playerAnimator;
+        [SerializeField] PlayerAnimatorController playerAnimator;
         [SerializeField] LevelPreset levelPreset;
         [SerializeField] Spawner spawner;
 
         private void Awake()
         {
-            List<Vector2> shelterPositions = new List<Vector2>();
-            Transform shelterContainer = new GameObject().transform;
-            shelterContainer.name = "Shelters";
-            foreach(Shelter shelter in levelPreset.shelters)
-            {
-                shelter.SetRandomPosition();
-                shelterPositions.Add(shelter.point);
-                Instantiate(shelter.shelterPrefab, shelter.point, Quaternion.identity, shelterContainer);
-            }
-            LevelData.InitData(levelPreset, shelterPositions.ToArray());
+            Profile.LoadData();
+
+            Vector2[] points = levelPreset.SpawnShelters();
+            LevelData.InitData(levelPreset, points);
             
             spawner.InitUnitInfos(levelPreset.unitsInfos);
+
+            LevelData.levelData.fortressCount.Where(x => x == 0).Subscribe(OnLose);
+            LevelData.levelData.enemyCount.Where(x => x == 0).Subscribe(OnWin);
         }
-        private void OnLoseFortress(int count)
+        private void OnLose(int count)
+        {
+            if(count == 0)
+            {
+                playerAnimator.SetLose();
+                Debug.Log("You Lose!");
+            }
+        }
+        private void OnWin(int count)
         {
             if (count == 0)
-                Debug.Log("You Lose");
+            {
+                playerAnimator.SetVictory();
+                Debug.Log("You Win!");
+            }
         }
     }
 }

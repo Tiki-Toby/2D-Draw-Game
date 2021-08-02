@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scrypts.LevelManagerSystem;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -28,10 +29,13 @@ namespace Assets.Scrypts.Entity
         public void TakeDamage(float dmg)
         {
             curHP -= dmg;
-            if (curHP < 0)
-                Destroy(gameObject);
-            else
+            if (curHP > 0)
                 UpdateImage();
+            else
+            {
+                LevelData.levelData.fortressCount.Value--;
+                Destroy(gameObject);
+            }
         }
         private void UpdateImage()
         {

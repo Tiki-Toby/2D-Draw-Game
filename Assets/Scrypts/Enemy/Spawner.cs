@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Scrypts.Entity
+namespace Assets.Scrypts.Enemy
 {
     public enum RespawnArea
     {
@@ -36,7 +32,7 @@ namespace Assets.Scrypts.Entity
         void Start()
         {
             rightTop = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
-            leftBottom = Camera.main.ViewportToWorldPoint(new Vector2(0, 0.5f));
+            leftBottom = Camera.main.ViewportToWorldPoint(new Vector2(0, 0.5f)); 
         }
         public void InitUnitInfos(UnitInfos[] enemyPrefabs)
         {
@@ -46,7 +42,6 @@ namespace Assets.Scrypts.Entity
         private IEnumerator SpawnEnemy(UnitInfos unit)
         {
             yield return new WaitForSeconds(unit.respawnTimeout);
-            Enemy enemy = Instantiate(unit.enemyPrefab, transform);
             Vector2 position = Vector2.zero;
             switch (unit.respawnArea)
             {
@@ -63,7 +58,7 @@ namespace Assets.Scrypts.Entity
                     position.x = rightTop.x + UnityEngine.Random.Range(0, depth);
                     break;
             }
-            enemy.SetSpawnPoint(position);
+            Instantiate(unit.enemyPrefab, position, Quaternion.identity, transform);
         }
     }
 }
