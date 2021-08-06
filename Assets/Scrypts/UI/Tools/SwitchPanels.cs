@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SwitchPanels : MonoBehaviour
+namespace Assets.Scrypts.UI
 {
-    [SerializeField] GameObject panel;
-
-    private void Start()
+    public class SwitchPanels : MonoBehaviour
     {
-        this.GetComponent<Button>().onClick.AddListener(() =>
+        [SerializeField] GameObject panel;
+        private void Start()
         {
-            Transform parent = transform.root;
-            parent.GetComponent<SpawnerManager>().SpawnPanel(panel);
-        });
+            this.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Transform parent = transform.root;
+                parent.GetComponent<SpawnerManager>().SpawnPanel(panel);
+            });
+        }
     }
 }

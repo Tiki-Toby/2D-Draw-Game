@@ -1,5 +1,6 @@
-﻿using System;
+﻿using Assets.Scrypts.LevelManagerSystem;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scrypts.Enemy
@@ -10,38 +11,54 @@ namespace Assets.Scrypts.Enemy
         Right,
         Top
     }
-    [Serializable]
-    public struct UnitInfos
-    {
-        public RespawnArea respawnArea;
-        public float respawnTimeout;
-        public Enemy enemyPrefab;
-
-        public UnitInfos(RespawnArea respawnArea, float respawnTimeout, Enemy enemyPrefab)
-        {
-            this.respawnArea = respawnArea;
-            this.respawnTimeout = respawnTimeout;
-            this.enemyPrefab = enemyPrefab;
-        }
-    }
     class Spawner : MonoBehaviour
     {
         [SerializeField] float depth;
+        private List<UnitInfos> units;
 
         private Vector2 leftBottom, rightTop;
         void Start()
         {
+            units = new List<UnitInfos>();
             rightTop = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
             leftBottom = Camera.main.ViewportToWorldPoint(new Vector2(0, 0.5f)); 
         }
         public void InitUnitInfos(UnitInfos[] enemyPrefabs)
         {
-            foreach (UnitInfos unit in enemyPrefabs)
-                StartCoroutine(SpawnEnemy(unit));
+            UnitInfos[] unitsArray = (UnitInfos[])enemyPrefabs.Clone();
+            int size = unitsArray.Length;
+            for(int i = 0; i < size; i++)
+            {
+                for (int j = i; j < size; j++)
+                    if (unitsArray[i].respawnTimeout > unitsArray[j].respawnTimeout)
+                    {
+                        UnitInfos unit = unitsArray[i];
+                        unitsArray[i] = unitsArray[j];
+                        unitsArray[j] = unit;
+                    }
+                unitsArray[i].respawnTimeout += Time.time;
+            }
+            units = new List<UnitInfos>(unitsArray);
         }
-        private IEnumerator SpawnEnemy(UnitInfos unit)
+        private void Update()
+        {
+            if(units.Count > 0)
+                if (units[0].respawnTimeout < Time.time)
+                    while (units[0].respawnTimeout < Time.time)
+                    {
+                        SpawnEnemy(units[0]);
+                        units.RemoveAt(0);
+                        if (units.Count == 0)
+                            break;
+                    }
+        }
+        private IEnumerator SpawnEnemyCorutine(UnitInfos unit)
         {
             yield return new WaitForSeconds(unit.respawnTimeout);
+            SpawnEnemy(unit);
+        }
+        private void SpawnEnemy(UnitInfos unit)
+        {
             Vector2 position = Vector2.zero;
             switch (unit.respawnArea)
             {

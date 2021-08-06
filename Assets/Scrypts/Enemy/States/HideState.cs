@@ -5,11 +5,11 @@ namespace Assets.Scrypts.Enemy
     public class HideState : EnemyState
     {
         float time;
-        public HideState(Animator anim, SymbolOutputController symbolContainer, float time) : base(anim, "isHide")
+        public HideState(Animator anim, EnemyHP enemyHP, float time) : base(anim, "isHide")
         {
             this.time = Time.time + time;
-            symbolContainer.HideSymbols();
-            onEnd += () => symbolContainer.HideSymbols(false);
+            enemyHP.SwitchHide();
+            onEnd += () => enemyHP.SwitchHide();
         }
         public override bool EndCondition()
         {

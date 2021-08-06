@@ -7,10 +7,11 @@ using UnityEngine;
 
 namespace Assets.Scrypts.Enemy
 {
-    public abstract class Enemy : MonoBehaviour
+    public abstract class EnemyController : MonoBehaviour
     {
         [SerializeField] protected Animator anim;
         [SerializeField] protected EnemyHP enemyHp;
+        protected ref EnemyHP HpStruct => ref enemyHp;
         [SerializeField] protected AttackData attackData;
         [SerializeField] private Loot[] loots;
 
@@ -58,34 +59,37 @@ namespace Assets.Scrypts.Enemy
                 anim.SetTrigger("TakingDamage");
                 if (!enemyHp.isAlive)
                 {
-                    //состояние смерти
-                    anim.SetTrigger("DeadTrigger");
                     //уменьшаем счетчик врагов
                     LevelData.levelData.enemyCount.Value--;
-
-                    //определяем дроп
-                    Dictionary<ValueType, Loot> onSpawnLoot = new Dictionary<ValueType, Loot>();
-                    foreach (Loot loot in loots)
-                    {
-                        float randomValue = UnityEngine.Random.value;
-                        float offset = loot.propability / 2;
-                        if (randomValue > 0.5f - offset && randomValue < 0.5f + offset)
-                        {
-                            ValueType valueType = loot.lootPrefab.valutType;
-                            if (onSpawnLoot.ContainsKey(valueType))
-                                onSpawnLoot[valueType] += loot;
-                            else
-                                onSpawnLoot.Add(valueType, loot);
-                        }
-                    }
-                    //спавним дроп
-                    foreach (Loot loot in onSpawnLoot.Values)
-                        loot.Spawn(_transform.position);
-
+                    //состояние смерти
+                    anim.SetTrigger("DeadTrigger");
+                    //спавним лут
+                    SpawnLoot();
                     //состояние ожидание (в StateMachine() соверается переход)
                     State = new IdleState(anim, -1);
                 }
             }
+        }
+        protected void SpawnLoot()
+        {
+            //определяем дроп
+            Dictionary<ValueType, Loot> onSpawnLoot = new Dictionary<ValueType, Loot>();
+            foreach (Loot loot in loots)
+            {
+                float randomValue = UnityEngine.Random.value;
+                float offset = loot.propability / 2;
+                if (randomValue > 0.5f - offset && randomValue < 0.5f + offset)
+                {
+                    ValueType valueType = loot.lootPrefab.valutType;
+                    if (onSpawnLoot.ContainsKey(valueType))
+                        onSpawnLoot[valueType] += loot;
+                    else
+                        onSpawnLoot.Add(valueType, loot);
+                }
+            }
+            //спавним дроп
+            foreach (Loot loot in onSpawnLoot.Values)
+                loot.Spawn(_transform.position);
         }
         private void Update()
         {

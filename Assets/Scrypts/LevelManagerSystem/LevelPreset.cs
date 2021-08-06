@@ -7,6 +7,20 @@ using UnityEngine;
 namespace Assets.Scrypts.LevelManagerSystem
 {
     [Serializable]
+    public struct UnitInfos
+    {
+        public RespawnArea respawnArea;
+        public float respawnTimeout;
+        public EnemyController enemyPrefab;
+
+        public UnitInfos(RespawnArea respawnArea, float respawnTimeout, EnemyController enemyPrefab)
+        {
+            this.respawnArea = respawnArea;
+            this.respawnTimeout = respawnTimeout;
+            this.enemyPrefab = enemyPrefab;
+        }
+    }
+    [Serializable]
     struct Shelter
     {
         public Vector2 point;
@@ -34,38 +48,6 @@ namespace Assets.Scrypts.LevelManagerSystem
         public UnitInfos[] unitsInfos;
         public PlayableSymbolList symbols;
         public string[] Symbols { get => symbols.symbols; }
-        public Vector2[] Shelters
-        {
-            get
-            {
-                Vector2[] points = new Vector2[shelters.Length];
-                for(int i = 0; i < shelters.Length; i++) 
-                    points[i] = shelters[i].shelterPrefab.transform.position;
-                return points;
-            }
-        }
-
-        //public Vector2[] SpawnShelters()
-        //{
-        //    GameObject[] Forteress = GameObject.FindGameObjectsWithTag("Fortress");
-        //    Transform shelterContainer = new GameObject().transform;
-        //    shelterContainer.name = "Shelters";
-        //    Vector2[] points = new Vector2[shelters.Length];
-        //    for (int i = 0; i < shelters.Length; i++)
-        //    {
-        //        points[i] = shelters[i].GetRandomPosition();
-        //        for(int j = 0; j < Forteress.Length; j++)
-        //        {
-        //            while (points[i] == (Vector2)Forteress[j].transform.position)
-        //            {
-        //                points[i] = shelters[i].GetRandomPosition();
-        //            }
-        //        }
-        //        Instantiate(shelters[i].shelterPrefab, points[i], Quaternion.identity, shelterContainer);
-        //    }
-        //    return points;
-        //}
-
         public Vector2[] SpawnShelters()
         {
 

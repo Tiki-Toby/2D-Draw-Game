@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scrypts.Entity
 {
@@ -11,35 +12,38 @@ namespace Assets.Scrypts.Entity
         [SerializeField] float hp;
         [SerializeField] bool isRegenable;
         [SerializeField] float regenHpPerSecond;
-
-        private SpriteRenderer image;
+        [SerializeField] Transform healthBar;
+        [SerializeField] SpriteRenderer image;
+        
         private int curSprite;
-        private float curHP;
+        private float curHp { get; set; }
+        public float CurHp { get => curHp; set => UpdateHp(value); }
 
         void Start()
         {
-            image = GetComponent<SpriteRenderer>();
             Array.Reverse(views);
-            curHP = hp;
-            UpdateImage();
+            CurHp = hp;
 
             if (isRegenable)
                 StartCoroutine(Regenerate());
         }
         public void TakeDamage(float dmg)
         {
-            curHP -= dmg;
-            if (curHP > 0)
-                UpdateImage();
-            else
+            CurHp -= dmg;
+            if (curHp == 0)
             {
+                PathManager.pathManager.DestroyFortress(transform.position);
                 LevelData.levelData.fortressCount.Value--;
                 Destroy(gameObject);
             }
         }
-        private void UpdateImage()
+        private void UpdateHp(float newHp)
         {
-            int index = (int)(curHP * (views.Length - 1) / hp);
+            curHp = Mathf.Clamp(newHp, 0, hp);
+            healthBar.localScale = new Vector3(curHp / hp, 1f);
+            int index = (int)((int)curHp * (views.Length - 1) / hp);
+            Debug.Log(index);
+            Debug.Log(curHp);
             if (index != curSprite)
             {
                 image.sprite = views[index];
@@ -50,19 +54,10 @@ namespace Assets.Scrypts.Entity
         {
             while (gameObject.activeSelf)
             {
-
-                if (curHP < hp)
-                {
-                    float add = regenHpPerSecond * Time.deltaTime;
-                    curHP = Mathf.Clamp(curHP + add, curHP, hp);
-                    UpdateImage();
-                }
+                if (curHp < hp)
+                    CurHp += regenHpPerSecond * Time.deltaTime;
                 yield return null;
             }
-        }
-        private void OnDestroy()
-        {
-
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Assets.Scrypts.InputModule;
+﻿using Assets.Scrypts.GameData;
+using Assets.Scrypts.InputModule;
 using Assets.Scrypts.LevelManagerSystem;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,8 @@ namespace Assets.Scrypts.Enemy
     {
         [SerializeField] private SymbolCloseType closeType;
         [SerializeField] private int countSymbol;
-        
+
+        public bool isHide { get; private set; }
         public bool isAlive { get => hpSymbols.Count > 0; }
         private List<string> hpSymbols;
         private Func<string, bool> onTakeDamage;
@@ -63,11 +65,19 @@ namespace Assets.Scrypts.Enemy
             Transform symbolsContainer = symbolOutputter.transform;
             symbolsContainer.SetParent(enemy);
             symbolsContainer.localPosition = new Vector2(0, 0.5f);
-            symbolsContainer.localScale = new Vector2(0.4f, 0.4f);
+            symbolsContainer.localScale = Vector2.one * EnemyData.SymbolIconScale;
         }
         public bool isTakeDamage(string c) => onTakeDamage.Invoke(c);
-        public void HideGUI(bool isNeedHide = true) =>
-            symbolOutputter.HideSymbols(isNeedHide);
+        public void SwitchHide()
+        {
+            isHide = !isHide;
+            symbolOutputter.HideSymbols(isHide);
+        }
+        public void SetHide(bool isHide)
+        {
+            this.isHide = isHide;
+            symbolOutputter.HideSymbols(isHide);
+        }
 
         private void InitTakeDamage(SymbolCloseType closeType)
         {
@@ -94,7 +104,7 @@ namespace Assets.Scrypts.Enemy
         }
         private bool OnTakeDamage(string c, int index)
         {
-            bool isDamage = hpSymbols[index] == c;
+            bool isDamage = hpSymbols[index] == c && !isHide;
             if (isDamage)
             {
                 symbolOutputter.TakeDamage(index);

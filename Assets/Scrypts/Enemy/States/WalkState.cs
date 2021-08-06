@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scrypts.GameData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,14 +10,11 @@ namespace Assets.Scrypts.Enemy
 {
     class WalkToTargetState : EnemyState
     {
-        float minOffset;
         Transform transform;
         Vector2 direction;
         Vector3 distance;
         public WalkToTargetState(Animator anim, Transform transform, Vector2 target, float velocity) : base(anim, "isMove")
         {
-            minOffset = 0.02f;
-            Debug.Log("Target: " + target.ToString());
             this.transform = transform;
             distance = (Vector2)transform.localPosition - target;
             direction = distance.normalized * velocity;
@@ -24,7 +22,7 @@ namespace Assets.Scrypts.Enemy
         }
         public override bool EndCondition()
         {
-            return Mathf.Sqrt(distance.sqrMagnitude) < minOffset;
+            return Mathf.Sqrt(distance.sqrMagnitude) < EnemyData.InaccuracyToTarget;
         }
 
         public override void Update()

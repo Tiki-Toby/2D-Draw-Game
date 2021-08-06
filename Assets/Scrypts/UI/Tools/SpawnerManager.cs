@@ -1,29 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.UI;
 
-public class SpawnerManager : MonoBehaviour
+namespace Assets.Scrypts.UI
 {
-    public void SpawnPanel(GameObject panel)
+    public class SpawnerManager : MonoBehaviour
     {
-        GameObject obj = GameObject.Find(panel.name);
-        if (obj)
+        public void SpawnPanel(GameObject panel)
         {
-            Destroy(obj);
-            return;
+            GameObject obj = GameObject.Find(panel.name);
+            if (obj)
+            {
+                Destroy(obj);
+                return;
+            }
+
+            DestroyActivePanel();
+            Instantiate(panel, this.transform).name = panel.name;
         }
 
-        DestroyActivePanel();
-        Instantiate(panel, this.transform).name = panel.name;
-    }
-
-    void DestroyActivePanel()
-    { 
-        GameObject[] panels = GameObject.FindGameObjectsWithTag("Panel");
-        foreach (GameObject obj in panels)
+        void DestroyActivePanel()
         {
-            Destroy(obj);
+            GameObject[] panels = GameObject.FindGameObjectsWithTag("Panel");
+            foreach (GameObject obj in panels)
+            {
+                Destroy(obj);
+            }
         }
     }
 }

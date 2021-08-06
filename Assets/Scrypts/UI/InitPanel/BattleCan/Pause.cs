@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Pause : MonoBehaviour
+namespace Assets.Scrypts.UI
 {
-
-    void Start()
+    public class Pause : MonoBehaviour
     {
-        this.GetComponent<Button>().onClick.AddListener(() =>
+        void Start()
         {
-            if (Time.timeScale == 0)
+            this.GetComponent<Button>().onClick.AddListener(() =>
             {
-                Time.timeScale = 1;
-            }
-            else
-            {
-                Time.timeScale = 0;
-            }
-        });
+                if (GameObject.FindGameObjectsWithTag("Panel").Length < 2)
+                {
+                    if (Time.timeScale == 0)
+                    {
+                        Time.timeScale = 1;
+                    }
+                    else
+                    {
+                        Time.timeScale = 0;
+                    }
+                }
+            });
+        }
     }
 }

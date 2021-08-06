@@ -1,4 +1,5 @@
 using Assets.Scrypts.InputModule;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,13 +25,21 @@ namespace Assets.Scrypts.Enemy
         public void SetAttack() =>
             anim.SetTrigger("Attack");
 
+        public void Reset()
+        {
+            anim.SetBool("isVictory", false);
+            anim.SetBool("isLose", false);
+            anim.ResetTrigger("Mistake");
+            anim.ResetTrigger("Attack");
+        }
+
         //обрабатывается в LevelManager
         //все враги побежденны
         public void SetVictory() =>
-            anim.SetTrigger("Victory");
+            anim.SetBool("isVictory", true);
         //все владения разрушены
         public void SetLose() =>
-            anim.SetTrigger("Lose");
+            anim.SetBool("isLose", true);
 
     }
 }

@@ -39,5 +39,4 @@ public interface IAdsProvider
     /// Пропуск Reward видео
     /// </summary>
     Action RewardedVideoSkipped { get; set; }
-
 }

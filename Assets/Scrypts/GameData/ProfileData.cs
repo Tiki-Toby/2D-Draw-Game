@@ -15,18 +15,29 @@ namespace Assets.Scrypts.GameData
         public long coin, crystal;
         public int maxLvl;
 
-        public ProfileData(long coin, long crystal, int lvl)
+        public ProfileData(long coin, long crystal, int maxLvl)
         {
             this.coin = coin;
             this.crystal = crystal;
-            this.maxLvl = lvl;
+            this.maxLvl = maxLvl;
+        }
+        public long GetValut(ValutType valutType)
+        {
+            switch (valutType)
+            {
+                case ValutType.Coin:
+                    return coin;
+                case ValutType.Crystal:
+                    return crystal;
+            }
+            return 0;
         }
     }
 
     //класс с хранением, сохранением и обработкой данных игрока
     static class Profile
     {
-        private static ProfileData _profileData;
+        private static ProfileData _profileData; 
         public static ProfileData profileData { get => _profileData; }
         public static void AddValut(long value, ValutType valutType)
         {
@@ -40,6 +51,11 @@ namespace Assets.Scrypts.GameData
                     break;
             }
         }
+        public static void UpdateLevel(int lvl)
+        {
+            if (_profileData.maxLvl < lvl)
+                _profileData.maxLvl = lvl;
+        }
         public static void SaveData() =>
             PlayerPrefs.SetString("Save", JsonUtility.ToJson(_profileData));
         public static void LoadData()
@@ -47,8 +63,13 @@ namespace Assets.Scrypts.GameData
             if (PlayerPrefs.HasKey("Save"))
                 _profileData = JsonUtility.FromJson<ProfileData>(PlayerPrefs.GetString("Save"));
             else
-                _profileData = new ProfileData(0, 0, 0);
+                _profileData = new ProfileData(0, 10, 0);
         }
-            
-    } 
+
+        public static void Reset()
+        {
+            _profileData = new ProfileData(0, 10, 0);
+            SaveData();
+        }
+    }
 }

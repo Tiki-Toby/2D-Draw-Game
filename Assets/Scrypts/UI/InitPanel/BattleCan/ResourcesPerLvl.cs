@@ -1,21 +1,25 @@
 using Assets.Scrypts.LevelManagerSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResourcesPerLvl: MonoBehaviour
+namespace Assets.Scrypts.UI
 {
-    [SerializeField] ValutType valut;
-
-    void Start()
+    public class ResourcesPerLvl : MonoBehaviour
     {
-        Text text = GetComponent<Text>();
-        LevelData.levelData.SubscribeOnValut(valut, (long value) => text.text = value.ToString());
-    }
+        [SerializeField] ValutType valut;
 
-    void Update()
-    {
-        
+        void Start()
+        {
+            LevelData.levelData.lvlValutes[(int)valut].Subscribe(UpdateScore).AddTo(this);
+        }
+
+        void UpdateScore(long value)
+        {
+            Text text = GetComponent<Text>();
+            text.text = value.ToString();
+        }
     }
 }

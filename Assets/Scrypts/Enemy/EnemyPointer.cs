@@ -21,7 +21,6 @@ namespace Assets.Scrypts.Enemy
             _transform = transform;
             Sprite sprite = GetComponent<SpriteRenderer>().sprite;
             Vector2 spriteSize = Camera.main.ScreenToWorldPoint(sprite.rect.size) * _transform.localScale.x;
-            Debug.Log(spriteSize);
 
             leftBottom = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
             leftBottom.x -= spriteSize.x / 4f;
@@ -52,7 +51,7 @@ namespace Assets.Scrypts.Enemy
             bool isIn = position.x > rightTop.x || position.x < leftBottom.x || position.y > rightTop.y;
             return isIn;
         }
-        
+
         private void UpdatePostion(Vector2 position)
         {
             //считаем позицию

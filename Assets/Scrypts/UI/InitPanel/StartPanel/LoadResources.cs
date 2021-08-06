@@ -7,18 +7,13 @@ using UnityEngine.UI;
 
 namespace Assets.Scrypts.UI
 {
-    public class AllResources : MonoBehaviour
+    public class LoadResources : MonoBehaviour
     {
         [SerializeField] ValutType valut;
-
         void Start()
         {
             Text text = GetComponent<Text>();
-            long add = (Profile.profileData.GetValut(valut) - LevelData.levelData.startValuts[(int)valut]);
-            if (add > 0)
-                text.text = $"+{add}";
-            else
-                text.text = "0";
+            text.text = Profile.profileData.GetValut(valut).ToString();
         }
     }
 }

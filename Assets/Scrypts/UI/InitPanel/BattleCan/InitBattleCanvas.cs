@@ -1,3 +1,4 @@
+using Assets.Scrypts.GameData;
 using Assets.Scrypts.LevelManagerSystem;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,28 +7,33 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class InitBattleCanvas : MonoBehaviour
+namespace Assets.Scrypts.UI
 {
-    [SerializeField] GameObject winPanel;
-    [SerializeField] GameObject losePanel;
-
-    void Start()
+    public class InitBattleCanvas : MonoBehaviour
     {
-        LevelData.levelData.enemyCount.Where(x => x == 0).Subscribe(Win);
-        LevelData.levelData.fortressCount.Where(x => x == 0).Subscribe(Lose);
-    }
+        [SerializeField] GameObject winPanel;
+        [SerializeField] GameObject losePanel;
 
-    void Win(int count)
-    {
-        Debug.Log(GameObject.Find(losePanel.name));
-        if(!GameObject.Find(losePanel.name))
+        void Start()
         {
-            Instantiate(winPanel, this.transform).name = winPanel.name;
+            LevelData.levelData.enemyCount.Where(x => x == 0).Subscribe(Win);
+            LevelData.levelData.fortressCount.Where(x => x == 0).Subscribe(Lose);
         }
-    }
 
-    void Lose(int count)
-    {
-        Instantiate(losePanel, this.transform).name = losePanel.name;
+        void Win(int count)
+        {
+            StartCoroutine(DelayOnStart(winPanel));
+        }
+
+        void Lose(int count)
+        {
+            StartCoroutine(DelayOnStart(losePanel));
+        }
+
+        IEnumerator DelayOnStart(GameObject panel)
+        {
+            yield return new WaitForSeconds(PanelControllData.TimePanelSpawnDelay);
+            Instantiate(panel, this.transform).name = panel.name;
+        }
     }
 }

@@ -26,12 +26,12 @@ namespace Assets.Scrypts.Entity
                     targetPosition = Camera.main.ViewportToWorldPoint(new Vector2(1, 0));
                     break;
             }
-            transform.DOMoveX(targetPosition.x, 1).SetEase(x).OnComplete(() =>
+            LevelData.levelData.AddValute(valutType, valueToAdd);
+            transform.DOMoveX(targetPosition.x, 1).SetDelay(1).SetEase(x).OnComplete(() =>
             {
-                LevelData.levelData.AddValute(valutType, valueToAdd);
                 Destroy(gameObject);
             });
-            transform.DOMoveY(targetPosition.y, 1).SetEase(y);
+            transform.DOMoveY(targetPosition.y, 1).SetDelay(1).SetEase(y);
         }
     }
 }
