@@ -10,9 +10,24 @@ namespace Assets.Scrypts.Enemy
     public abstract class EnemyController : MonoBehaviour
     {
         [SerializeField] protected Animator anim;
-        [SerializeField] protected EnemyHP enemyHp;
-        protected ref EnemyHP HpStruct => ref enemyHp;
-        [SerializeField] protected AttackData attackData;
+        [SerializeField] private EnemyHP enemyHp;
+        protected EnemyHP HpStruct
+        {
+            get 
+            {
+                ref EnemyHP hp = ref enemyHp;
+                return hp;
+            }
+        }
+        [SerializeField] private AttackData attackData;
+        protected AttackData AttackInfo
+        {
+            get
+            {
+                ref AttackData data = ref attackData;
+                return data;
+            }
+        }
         [SerializeField] private Loot[] loots;
 
         protected Transform _transform;
@@ -42,10 +57,6 @@ namespace Assets.Scrypts.Enemy
 
             //Подписка на уорректный ввод
             InputBehaviour.Subscribe(TakeDamage);
-
-            //Создание указателя, пока враг за экраном
-            Instantiate(Resources.Load<EnemyPointer>("Prefabs/Objects/EnemyPointer"), _transform)
-                .InitPointer(_transform);
         }
         //Задаются следующие состояния, по завершению предыдущего
         protected abstract void StateMachine();
@@ -101,11 +112,11 @@ namespace Assets.Scrypts.Enemy
         }
 
         //тригер на атаку владения
-        protected void OnTriggerEnter2D(Collider2D collider)
+        private void OnTriggerEnter2D(Collider2D collider)
         {
             FortressController fortress = collider.GetComponent<FortressController>();
-            if(fortress)
-                State = new AttackState(anim, fortress, attackData, () => attackData.attackCount--);
+            if (fortress)
+                State = new AttackState(anim, fortress, AttackInfo);
         }
 
         //отписка от ввода символов

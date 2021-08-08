@@ -4,15 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
-
 
 namespace Assets.Scrypts.UI
 {
-    public class InitBattleCanvas : MonoBehaviour
+    public class WinLoseControl : MonoBehaviour
     {
         [SerializeField] GameObject winPanel;
         [SerializeField] GameObject losePanel;
+        [SerializeField] UIManager manager;
 
         void Start()
         {
@@ -33,7 +32,10 @@ namespace Assets.Scrypts.UI
         IEnumerator DelayOnStart(GameObject panel)
         {
             yield return new WaitForSeconds(PanelControllData.TimePanelSpawnDelay);
-            Instantiate(panel, this.transform).name = panel.name;
+
+            PanelController pane = panel.GetComponent<PanelController>();
+            manager.AddPanel(pane);
         }
     }
 }
+

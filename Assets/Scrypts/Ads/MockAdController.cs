@@ -47,8 +47,7 @@ namespace Assets.Scrypts.Ads
 
         public void LoadRewardedVideo(GameObject gameObject)
         {
-            Debug.Log("Ready");
-            IsReady = true;
+            IsReady = false;
             observer = gameObject;
             StartCoroutine(LoadAd());
         }
@@ -60,10 +59,8 @@ namespace Assets.Scrypts.Ads
         }
         private IEnumerator LoadAd()
         {
-            while (!IsReadyRewardedVideo())
-                yield return null;
-
-            yield return new WaitForSeconds(timeForLoad);
+            yield return new WaitForSecondsRealtime(timeForLoad);
+            Debug.Log("Ready");
             IsReady = true;
             observer.SetActive(true);
         }
@@ -71,7 +68,7 @@ namespace Assets.Scrypts.Ads
         private IEnumerator ShowAd()
         {
             isAdShowen = false;
-            yield return new WaitForSeconds(timeForShowAd);
+            yield return new WaitForSecondsRealtime(timeForShowAd);
             isAdShowen = true;
             RewardedVideoFinished.Invoke();
             Deinit();

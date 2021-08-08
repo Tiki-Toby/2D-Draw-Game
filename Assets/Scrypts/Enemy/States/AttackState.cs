@@ -15,16 +15,13 @@ namespace Assets.Scrypts.Enemy
         FortressController fortress;
         AttackData attackData;
         float timer;
-        Action onAttack;
 
-        public AttackState(Animator anim, FortressController fortress, AttackData attackData, Action onAttack) : base(anim, "isAttack")
+        public AttackState(Animator anim, FortressController fortress, AttackData attackData) : base(anim, "isAttack")
         {
             anim.GetBehaviour<ControllAttack>().attackDelay = attackData.AttackDelay;
             this.attackData = attackData;
-            this.onAttack = onAttack;
             this.fortress = fortress;
             timer = Time.time;
-            anim.SetFloat("AttackSpeed", 1);
             SetAnimState(false);
         }
         public override bool EndCondition() => (attackData.attackCount == 0 && !anim.GetBool("isAttack")) || !fortress;
@@ -35,7 +32,6 @@ namespace Assets.Scrypts.Enemy
                 timer += attackData.AttackDelay;
                 fortress.TakeDamage(attackData.dmg);
                 attackData.attackCount--;
-                onAttack.Invoke();
                 SetAnimState(true);
             }
         }

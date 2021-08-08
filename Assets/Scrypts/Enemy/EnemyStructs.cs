@@ -40,13 +40,12 @@ namespace Assets.Scrypts.Enemy
     {
         [SerializeField] private SymbolCloseType closeType;
         [SerializeField] private int countSymbol;
+        [SerializeField] private SymbolOutputController symbolOutputter;
 
         public bool isHide { get; private set; }
         public bool isAlive { get => hpSymbols.Count > 0; }
         private List<string> hpSymbols;
         private Func<string, bool> onTakeDamage;
-        private SymbolOutputController symbolOutputter;
-        public SymbolOutputController SymbolContainer => symbolOutputter;
 
         public void CreateHp(Transform enemy)
         {
@@ -59,13 +58,7 @@ namespace Assets.Scrypts.Enemy
             }
             InitTakeDamage(closeType);
 
-            symbolOutputter = new GameObject("Symbols").AddComponent<SymbolOutputController>();
-
             symbolOutputter.InitSymbolChain(hpSymbols.ToArray());
-            Transform symbolsContainer = symbolOutputter.transform;
-            symbolsContainer.SetParent(enemy);
-            symbolsContainer.localPosition = new Vector2(0, 0.5f);
-            symbolsContainer.localScale = Vector2.one * EnemyData.SymbolIconScale;
         }
         public bool isTakeDamage(string c) => onTakeDamage.Invoke(c);
         public void SwitchHide()

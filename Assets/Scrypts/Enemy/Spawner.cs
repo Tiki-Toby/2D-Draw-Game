@@ -5,16 +5,12 @@ using UnityEngine;
 
 namespace Assets.Scrypts.Enemy
 {
-    public enum RespawnArea
-    {
-        Left,
-        Right,
-        Top
-    }
     class Spawner : MonoBehaviour
     {
+        [SerializeField] LevelEnemyManager enemyManager;
         [SerializeField] float depth;
         private List<UnitInfos> units;
+
 
         private Vector2 leftBottom, rightTop;
         void Start()
@@ -52,11 +48,6 @@ namespace Assets.Scrypts.Enemy
                             break;
                     }
         }
-        private IEnumerator SpawnEnemyCorutine(UnitInfos unit)
-        {
-            yield return new WaitForSeconds(unit.respawnTimeout);
-            SpawnEnemy(unit);
-        }
         private void SpawnEnemy(UnitInfos unit)
         {
             Vector2 position = Vector2.zero;
@@ -75,7 +66,7 @@ namespace Assets.Scrypts.Enemy
                     position.x = rightTop.x + UnityEngine.Random.Range(0, depth);
                     break;
             }
-            Instantiate(unit.enemyPrefab, position, Quaternion.identity, transform);
+            enemyManager.AddEnemy(Instantiate(unit.enemyPrefab, position, Quaternion.identity, transform));
         }
     }
 }

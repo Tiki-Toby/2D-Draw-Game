@@ -16,23 +16,31 @@ namespace Assets.Scrypts.InputModule
 		public UnityEvent OnErrorInput;
 		[SerializeField] LineRenderer currentGestureLineRenderer;
 
-		private List<Gesture> trainingSet = new List<Gesture>();
-		private List<Point> points = new List<Point>();
+		private List<Gesture> trainingSet;
+		private List<Point> points;
 
 		private int vertexCount;
 		private string symbol;
 
 		private void Start()
 		{
-			//Load pre-made gestures
+			points = new List<Point>();
+			InitSymbolTrainingAssets();
+		}
+		public void InitSymbolTrainingAssets()
+        {
+			trainingSet = new List<Gesture>();
 			string[] dirnames = LevelData.levelData.symbols;
 			foreach (string dirname in dirnames)
 			{
-				Debug.Log(dirname);
 				TextAsset[] gesturesXml = Resources.LoadAll<TextAsset>("Letters/" + dirname);
 				foreach (TextAsset gestureXml in gesturesXml)
 					trainingSet.Add(GestureIO.ReadGestureFromXML(gestureXml.text));
 			}
+		}
+		public void Clear()
+        {
+			trainingSet = new List<Gesture>();
 		}
 		protected override string InputSymbol()
 		{

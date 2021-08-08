@@ -22,7 +22,7 @@ namespace Assets.Scrypts.Enemy
         private void Start()
         {
             spawnPoint = _transform.position;
-            LevelData.levelData.fortressCount
+            LevelData.levelData.fortressCount.ObserveEveryValueChanged(x => x.Value)
                 .Subscribe((int count) =>
                 {
                     if (count > 0)
@@ -37,10 +37,9 @@ namespace Assets.Scrypts.Enemy
                                 points = PathManager.pathManager.SearchPath(transform.position);
                                 break;
                         }
-                        curPoint = 0;
                         if (!(State is AttackState))
                         {
-                            State = new WalkToTargetState(anim, _transform, points[curPoint], velocity);
+                            State = new WalkToTargetState(anim, _transform, points[0], velocity);
                             State.Subscribe(() => curPoint++);
                             curPoint = 0;
                         }
@@ -53,39 +52,45 @@ namespace Assets.Scrypts.Enemy
         private void EnemyWin()
         {
             anim.SetBool("isStolen", true);
-            enemyHp.SwitchHide();
+            HpStruct.SwitchHide();
             State = new WalkToTargetState(anim, transform, spawnPoint, velocity * 1.5f);
-            State.Subscribe(() => Destroy(gameObject));
+            State.Subscribe(() => _transform.parent.GetComponent<LevelEnemyManager>().OnDestroyEnemy(this));
         }
         protected override void StateMachine()
         {
-            //состояние когда лимит атак врага достигнут
-            //уходит с наворованным
-            if (attackData.attackCount == 0 && !enemyHp.isHide)
-            {
-                EnemyWin();
-                if(PathManager.pathManager.GetFortress().Length > 0)
-                    //уменьшаем счетчик врагов
-                    LevelData.levelData.enemyCount.Value--;
-            }
             //проверка жизней
-            else if (!enemyHp.isAlive)
+            if (HpStruct.isAlive)
+            {
+                //состояние когда лимит атак врага достигнут
+                //уходит с наворованным
+                if (AttackInfo.attackCount == 0)// && !HpStruct.isHide)
+                {
+                    EnemyWin();
+                    if (PathManager.pathManager.GetFortress().Length > 0)
+                        //уменьшаем счетчик врагов
+                        LevelData.levelData.enemyCount.Value--;
+                }
+                //Если путь ломанный, то прячется
+                else if (anim.GetBool("isMove"))
+                    State = new HideState(anim, HpStruct, EnemyData.TimeInHideState);
+                //если цель не достигнута
+                else if (points.Length > curPoint)
+                {
+                    State = new WalkToTargetState(anim, transform, points[curPoint], velocity);
+                    State.Subscribe(() => curPoint++);
+                }
+                //если что то идет не так, идет к владению напрямую
+                else
+                {
+                    EnemyWin();
+                    LevelData.levelData.enemyCount.Value--;
+                }
+            }
+            else
             {
                 State = new WalkToTargetState(anim, _transform, spawnPoint, velocity * 2);
-                State.Subscribe(() => Destroy(gameObject));
+                State.Subscribe(() => _transform.parent.GetComponent<LevelEnemyManager>().OnDestroyEnemy(this));
             }
-            //Если путь ломанный, то прячется
-            else if (anim.GetBool("isMove"))
-                State = new HideState(anim, HpStruct, EnemyData.TimeInHideState);
-            //если цель не достигнута
-            else if (points.Length > curPoint)
-            {
-                State = new WalkToTargetState(anim, transform, points[curPoint], velocity);
-                State.Subscribe(() => curPoint++);
-            }
-            //если что то идет не так, идет к владению напрямую
-            else
-                State = new WalkToTargetState(anim, transform, points[points.Length - 1], velocity);
         }
     }
 }

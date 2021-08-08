@@ -1,6 +1,7 @@
 ﻿using Assets.Scrypts.Enemy;
 using Assets.Scrypts.Entity;
 using Assets.Scrypts.GameData;
+using Assets.Scrypts.InputModule;
 using Assets.Scrypts.UI;
 using System;
 using UniRx;
@@ -14,6 +15,8 @@ namespace Assets.Scrypts.LevelManagerSystem
         [SerializeField] PlayerAnimatorController playerAnimator;
         [SerializeField] LvlInfo lvlInfoOtputter;
         [SerializeField] Spawner spawner;
+        [SerializeField] LevelEnemyManager enemiesController;
+        [SerializeField] DrawInput drawInput;
         private LevelPreset levelPreset;
 
         private LevelPreset NextLevel =>
@@ -49,6 +52,7 @@ namespace Assets.Scrypts.LevelManagerSystem
             Vector2[] points = levelPreset.SpawnShelters();
             PathManager.pathManager.CreateNodeList(points);
             LevelData.levelData.InitLevelData(levelPreset);
+            drawInput.InitSymbolTrainingAssets();
 
             lvlInfoOtputter.OutputLvlInfo();
             spawner.InitUnitInfos(levelPreset.unitsInfos);
@@ -78,11 +82,9 @@ namespace Assets.Scrypts.LevelManagerSystem
         private void DeserializeLevel()
         {
             playerAnimator.Reset();
-            EnemyController[] enemies = GameObject.FindObjectsOfType<EnemyController>();
             GameObject shelters = GameObject.Find("Shelters");
 
-            foreach (EnemyController enemy in enemies)
-                Destroy(enemy.gameObject);
+            enemiesController.DestroyAll();
             Destroy(shelters);
 
             //прячем панель с инфоормацией об уровне
@@ -94,6 +96,7 @@ namespace Assets.Scrypts.LevelManagerSystem
             {
                 playerAnimator.SetLose();
                 levelPreset = Resources.Load<LevelPreset>($"Levels/Level1");
+                drawInput.Clear();
                 Debug.Log("You Lose!");
             }
         }
@@ -102,11 +105,9 @@ namespace Assets.Scrypts.LevelManagerSystem
             if (count == 0)
             {
                 playerAnimator.SetVictory();
-                foreach (ValutType valut in Enum.GetValues(typeof(ValutType)))
-                    Profile.AddValut(LevelData.levelData.lvlValutes[(int)valut].Value, valut);
-
                 Profile.UpdateLevel(LevelData.levelData.currentLvl);
                 Profile.SaveData();
+                drawInput.Clear();
                 Debug.Log("You Win!");
             }
         }

@@ -42,8 +42,6 @@ namespace Assets.Scrypts.Entity
             curHp = Mathf.Clamp(newHp, 0, hp);
             healthBar.localScale = new Vector3(curHp / hp, 1f);
             int index = (int)((int)curHp * (views.Length - 1) / hp);
-            Debug.Log(index);
-            Debug.Log(curHp);
             if (index != curSprite)
             {
                 image.sprite = views[index];
