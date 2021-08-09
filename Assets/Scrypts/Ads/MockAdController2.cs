@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Assets.Scrypts.Ads
 {
-    class MockAdController : MonoBehaviour, IAdsProvider
+    class MockAdController2 : MonoBehaviour, IAdsProvider
     {
         [SerializeField] float timeForLoad;
         [SerializeField] float timeForShowAd;

@@ -40,7 +40,9 @@ namespace Assets.Scrypts.InputModule
 			}
 		}
 		public void Clear()
-        {
+		{
+			points.Clear();
+			currentGestureLineRenderer.positionCount = 0;
 			trainingSet = new List<Gesture>();
 		}
 		protected override string InputSymbol()

@@ -92,7 +92,7 @@ namespace Assets.Scrypts.Enemy
         }
         private bool OnTakeDamage(string c, int index)
         {
-            if (index < 0)
+            if (hpSymbols.Count == 0 || index < 0)
                 return false;
 
             bool isDamage = hpSymbols[index] == c && !isHide;

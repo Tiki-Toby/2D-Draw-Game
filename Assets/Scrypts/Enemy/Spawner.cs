@@ -21,7 +21,7 @@ namespace Assets.Scrypts.Enemy
         {
             UnitInfos[] unitsArray = (UnitInfos[])enemyPrefabs.Clone();
             int size = unitsArray.Length;
-            for(int i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
                 for (int j = i; j < size; j++)
                     if (unitsArray[i].respawnTimeout > unitsArray[j].respawnTimeout)
@@ -36,7 +36,7 @@ namespace Assets.Scrypts.Enemy
         }
         private void Update()
         {
-            if(units.Count > 0)
+            if (units.Count > 0)
                 if (units[0].respawnTimeout < Time.time)
                     while (units[0].respawnTimeout < Time.time)
                     {

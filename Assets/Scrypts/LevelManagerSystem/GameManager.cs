@@ -1,5 +1,6 @@
 ﻿using Assets.Scrypts.Enemy;
 using Assets.Scrypts.Entity;
+using Assets.Scrypts.InputModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace Assets.Scrypts.LevelManagerSystem
             _instance = this;
             enemies = new List<EnemyController>();
             forts = new List<FortressController>();
+            InputBehaviour.Subscribe(HeatEnemy);
         }
         public void SpawnForts()
         {
@@ -62,6 +64,11 @@ namespace Assets.Scrypts.LevelManagerSystem
         {
             enemies.Add(enemy);
             enemyManager.AddEnemy(enemy);
+        }
+        private void HeatEnemy(string c)
+        {
+            foreach (EnemyController enemy in enemies)
+                enemy.TakeDamage(c);
         }
         public void KillEnemy(EnemyController enemy)
         {
@@ -104,6 +111,11 @@ namespace Assets.Scrypts.LevelManagerSystem
             //спавним дроп
             foreach (Loot loot in onSpawnLoot.Values)
                 loot.Spawn(enemy.transform.position);
+        }
+        private void OnDestroy()
+        {
+            _instance = GameObject.FindObjectOfType<GameManager>();
+            InputBehaviour.UnSubscribe(HeatEnemy);
         }
     }
 }

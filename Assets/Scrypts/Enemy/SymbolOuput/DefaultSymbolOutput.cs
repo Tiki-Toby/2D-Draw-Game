@@ -21,19 +21,19 @@ namespace Assets.Scrypts.Enemy.SymbolOuput
         }
         private void ScaleCurrentSymbol()
         {
+            int size = sprites.Count;
+            if (size == 0 || closeType == SymbolCloseType.AnyOrder)
+                return;
+
             if (closeType == SymbolCloseType.Left)
             {
                 sprites[0].transform.localScale = Vector3.one * EnemyData.ScaleSymbolByOrder;
-                sprites[0].transform.localPosition += Vector3.left * width * (EnemyData.ScaleSymbolByOrder - 1) / sprites.Count;
+                sprites[0].transform.localPosition += Vector3.left * width * (EnemyData.ScaleSymbolByOrder - 1) / size;
             }
             else if (closeType == SymbolCloseType.Right)
             {
-                int size = sprites.Count;
-                if (size > 0)
-                {
-                    sprites[size - 1].transform.localScale = Vector3.one * EnemyData.ScaleSymbolByOrder;
-                    sprites[size - 1].transform.localPosition += Vector3.right * width * (EnemyData.ScaleSymbolByOrder - 1) / (size);
-                }
+                sprites[size-1].transform.localScale = Vector3.one * EnemyData.ScaleSymbolByOrder;
+                sprites[size-1].transform.localPosition += Vector3.right * width * (EnemyData.ScaleSymbolByOrder - 1) / size;
             }
         }
     }

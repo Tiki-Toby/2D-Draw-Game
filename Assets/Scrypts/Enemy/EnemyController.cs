@@ -56,15 +56,12 @@ namespace Assets.Scrypts.Enemy
 
             //определение данных о хп
             enemyHp.CreateHp(_transform);
-
-            //Подписка на уорректный ввод
-            InputBehaviour.Subscribe(TakeDamage);
         }
         //Задаются следующие состояния, по завершению предыдущего
         protected abstract void StateMachine();
 
         //Обработка введенного символа
-        private void TakeDamage(string c)
+        public void TakeDamage(string c)
         {
             if (enemyHp.isTakeDamage(c))
             {
@@ -88,12 +85,6 @@ namespace Assets.Scrypts.Enemy
                 StateMachine();
             else
                state.Update();
-        }
-
-        //отписка от ввода символов
-        private void OnDestroy()
-        {
-            InputBehaviour.UnSubscribe(TakeDamage);
         }
     }
 }

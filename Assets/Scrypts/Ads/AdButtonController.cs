@@ -5,8 +5,8 @@ namespace Assets.Scrypts.Ads
 {
     public abstract class AdButtonController : MonoBehaviour
     {
-        [SerializeField] MockAdController mockAdPrefab;
-        MockAdController mockAd;
+        [SerializeField] MockAdController2 mockAdPrefab;
+        MockAdController2 mockAd;
         private void Start()
         {
             //спавним панель рекламы
