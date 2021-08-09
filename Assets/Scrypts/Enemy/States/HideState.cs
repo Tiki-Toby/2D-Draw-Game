@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Assets.Scrypts.GameData;
+using UnityEngine;
 
 namespace Assets.Scrypts.Enemy
 {
     public class HideState : EnemyState
     {
         float time;
-        public HideState(Animator anim, EnemyHP enemyHP, float time) : base(anim, "isHide")
+        public HideState(Animator anim, EnemyHP enemyHP, float time) : base(anim, EnemyStateNames.HIDE)
         {
             this.time = Time.time + time;
             enemyHP.SwitchHide();

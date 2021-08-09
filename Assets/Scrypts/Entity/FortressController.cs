@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scrypts.Entity
 {
-    class FortressController : MonoBehaviour
+    public class FortressController : MonoBehaviour
     {
         [SerializeField] Sprite[] views;
         [SerializeField] float hp;
@@ -14,12 +14,24 @@ namespace Assets.Scrypts.Entity
         [SerializeField] float regenHpPerSecond;
         [SerializeField] Transform healthBar;
         [SerializeField] SpriteRenderer image;
-        
-        private int curSprite;
-        private float curHp { get; set; }
-        public float CurHp { get => curHp; set => UpdateHp(value); }
 
-        void Start()
+        private int curSprite;
+        private float curHp;
+        public float CurHp { get => curHp; set => UpdateHp(value); }
+        public float RegenPerSecond
+        {
+            get => isRegenable ? regenHpPerSecond : 0;
+            set
+            {
+                isRegenable = value > 0;
+                regenHpPerSecond = value;
+
+                if (isRegenable)
+                    StartCoroutine(Regenerate());
+            }
+        }
+
+        void Awake()
         {
             Array.Reverse(views);
             CurHp = hp;
@@ -31,11 +43,7 @@ namespace Assets.Scrypts.Entity
         {
             CurHp -= dmg;
             if (curHp == 0)
-            {
-                PathManager.pathManager.DestroyFortress(transform.position);
-                LevelData.levelData.fortressCount.Value--;
-                Destroy(gameObject);
-            }
+                GameManager.Instance.DestroyFortress(this);
         }
         private void UpdateHp(float newHp)
         {

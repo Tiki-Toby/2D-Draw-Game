@@ -21,21 +21,34 @@ namespace Assets.Scrypts.LevelManagerSystem
         Coin,
         Crystal
     }
+    struct FortressData
+    {
+        public float hp;
+        public Vector2 position;
+        public float regeneratPerSecond;
+        public FortressData(FortressController fort)
+        {
+            hp = fort.CurHp;
+            Debug.Log(fort.CurHp);
+            position = fort.transform.position;
+            regeneratPerSecond = fort.RegenPerSecond;
+        }
+        public void InitFortress(FortressController fort)
+        {
+            fort.CurHp = hp;
+            fort.transform.position = position;
+            fort.RegenPerSecond = regeneratPerSecond;
+        }
+    }
     //данные для перезагрузки уровня
     struct LvlStateOnStart
     {
-        public float[] fortsHps;
-        public Vector2[] fortsPositions;
-
+        public FortressData[] fortDatas;
         public LvlStateOnStart(FortressController[] forts)
         {
-            fortsHps = new float[forts.Length];
-            fortsPositions = new Vector2[forts.Length];
-            for(int i = 0; i < forts.Length; i++)
-            {
-                fortsHps[i] = forts[i].CurHp;
-                fortsPositions[i] = forts[i].transform.position;
-            }
+            fortDatas = new FortressData[forts.Length];
+            for (int i = 0; i < forts.Length; i++)
+                fortDatas[i] = new FortressData(forts[i]);
         }
     }
     class LevelData
@@ -72,7 +85,7 @@ namespace Assets.Scrypts.LevelManagerSystem
         public long LvlCoins { get => lvlValutes[(int)ValutType.Coin].Value; set => lvlValutes[(int)ValutType.Coin].SetValueAndForceNotify(value); }
         public long LvlCrystals { get => lvlValutes[(int)ValutType.Crystal].Value; set => lvlValutes[(int)ValutType.Crystal].SetValueAndForceNotify(value); }
         //данные на старт уровня
-        private LvlStateOnStart lvlStateOnStart;
+        public LvlStateOnStart lvlStateOnStart;
 
         public Sprite GetSpriteOf(string symbolName) =>
             symbolSprites[symbolName];
@@ -93,7 +106,7 @@ namespace Assets.Scrypts.LevelManagerSystem
             symbols = new string[] { "a" };
 
             symbolSprites = new Dictionary<string, Sprite>();
-            Sprite[] sprites = Resources.LoadAll<Sprite>("SymbolLists/SymbolSprites");
+            Sprite[] sprites = Resources.LoadAll<Sprite>(Paths.SYMBOL_SPRITES);
             foreach (Sprite sprite in sprites)
                 symbolSprites.Add(sprite.name.ToLower(), sprite);
 
@@ -123,22 +136,17 @@ namespace Assets.Scrypts.LevelManagerSystem
             foreach (ValutType valutType in Enum.GetValues(typeof(ValutType)))
                 lvlValutes[(int)valutType].Value = 0;
 
-            lvlStateOnStart = new LvlStateOnStart(GameObject.FindObjectsOfType<FortressController>());
+            lvlStateOnStart = new LvlStateOnStart(GameManager.Instance.Forts);
 
             enemyCount.Value = levelPreset.unitsInfos.Length;
             fortressCount.Value = PathManager.pathManager.GetFortress().Length;
         }
-        //пересоздает уровень
-        public void ResetLvl(FortressController fortPrefab)
+        public void ResetData()
         {
-            for (int i = 0; i < lvlStateOnStart.fortsHps.Length; i++)
-            {
-                FortressController fort = GameObject.Instantiate(fortPrefab, lvlStateOnStart.fortsPositions[i], Quaternion.identity);
-                fort.CurHp = lvlStateOnStart.fortsHps[i];
-            }
             foreach (ValutType valutType in Enum.GetValues(typeof(ValutType)))
                 lvlValutes[(int)valutType].Value = 0;
         }
+        //пересоздает уровень
         public static void InitData() =>
                 levelData = new LevelData();
     }

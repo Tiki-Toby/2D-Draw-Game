@@ -13,7 +13,7 @@ namespace Assets.Scrypts.Enemy
         Transform transform;
         Vector2 direction;
         Vector3 distance;
-        public WalkToTargetState(Animator anim, Transform transform, Vector2 target, float velocity) : base(anim, "isMove")
+        public WalkToTargetState(Animator anim, Transform transform, Vector2 target, float velocity) : base(anim, EnemyStateNames.WALK)
         {
             this.transform = transform;
             distance = (Vector2)transform.localPosition - target;

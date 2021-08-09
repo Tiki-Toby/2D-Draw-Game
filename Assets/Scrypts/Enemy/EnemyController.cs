@@ -1,4 +1,5 @@
 ﻿using Assets.Scrypts.Entity;
+using Assets.Scrypts.GameData;
 using Assets.Scrypts.InputModule;
 using Assets.Scrypts.LevelManagerSystem;
 using System;
@@ -28,7 +29,8 @@ namespace Assets.Scrypts.Enemy
                 return data;
             }
         }
-        [SerializeField] private Loot[] loots;
+        [SerializeField] Loot[] loots;
+        public Loot[] Loots => loots;
 
         protected Transform _transform;
         //ткущее состояние врага
@@ -67,40 +69,17 @@ namespace Assets.Scrypts.Enemy
             if (enemyHp.isTakeDamage(c))
             {
                 //состояние получения урона
-                anim.SetTrigger("TakingDamage");
+                anim.SetTrigger(EnemyStateNames.TAKE_DAMAGE);
                 if (!enemyHp.isAlive)
                 {
-                    //уменьшаем счетчик врагов
-                    LevelData.levelData.enemyCount.Value--;
                     //состояние смерти
-                    anim.SetTrigger("DeadTrigger");
-                    //спавним лут
-                    SpawnLoot();
+                    anim.SetTrigger(EnemyStateNames.DEAD);
+                    //убиваем врага (спавним лут и убираем его из счетчика)
+                    GameManager.Instance.KillEnemy(this);
                     //состояние ожидание (в StateMachine() соверается переход)
                     State = new IdleState(anim, -1);
                 }
             }
-        }
-        protected void SpawnLoot()
-        {
-            //определяем дроп
-            Dictionary<ValueType, Loot> onSpawnLoot = new Dictionary<ValueType, Loot>();
-            foreach (Loot loot in loots)
-            {
-                float randomValue = UnityEngine.Random.value;
-                float offset = loot.propability / 2;
-                if (randomValue > 0.5f - offset && randomValue < 0.5f + offset)
-                {
-                    ValueType valueType = loot.lootPrefab.valutType;
-                    if (onSpawnLoot.ContainsKey(valueType))
-                        onSpawnLoot[valueType] += loot;
-                    else
-                        onSpawnLoot.Add(valueType, loot);
-                }
-            }
-            //спавним дроп
-            foreach (Loot loot in onSpawnLoot.Values)
-                loot.Spawn(_transform.position);
         }
         private void Update()
         {
@@ -109,14 +88,6 @@ namespace Assets.Scrypts.Enemy
                 StateMachine();
             else
                state.Update();
-        }
-
-        //тригер на атаку владения
-        private void OnTriggerEnter2D(Collider2D collider)
-        {
-            FortressController fortress = collider.GetComponent<FortressController>();
-            if (fortress)
-                State = new AttackState(anim, fortress, AttackInfo);
         }
 
         //отписка от ввода символов

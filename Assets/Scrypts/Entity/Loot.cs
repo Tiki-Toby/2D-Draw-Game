@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scrypts.Entity
 {
     [Serializable]
-    struct Loot
+    public struct Loot
     {
         [Range(0.0f, 1.0f)]
         public float propability;

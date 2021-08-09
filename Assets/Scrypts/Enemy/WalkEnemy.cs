@@ -51,10 +51,10 @@ namespace Assets.Scrypts.Enemy
         }
         private void EnemyWin()
         {
-            anim.SetBool("isStolen", true);
+            anim.SetBool(EnemyStateNames.SELEBRATE, true);
             HpStruct.SwitchHide();
             State = new WalkToTargetState(anim, transform, spawnPoint, velocity * 1.5f);
-            State.Subscribe(() => _transform.parent.GetComponent<LevelEnemyManager>().OnDestroyEnemy(this));
+            State.Subscribe(() => GameManager.Instance.DestroyEnemy(this));
         }
         protected override void StateMachine()
         {
@@ -79,7 +79,7 @@ namespace Assets.Scrypts.Enemy
                     State = new WalkToTargetState(anim, transform, points[curPoint], velocity);
                     State.Subscribe(() => curPoint++);
                 }
-                //если что то идет не так, идет к владению напрямую
+                //если что то идет не так, то уходит и удаляется
                 else
                 {
                     EnemyWin();
@@ -89,7 +89,17 @@ namespace Assets.Scrypts.Enemy
             else
             {
                 State = new WalkToTargetState(anim, _transform, spawnPoint, velocity * 2);
-                State.Subscribe(() => _transform.parent.GetComponent<LevelEnemyManager>().OnDestroyEnemy(this));
+                State.Subscribe(() => GameManager.Instance.DestroyEnemy(this));
+            }
+        }
+        //тригер на атаку владения
+        private void OnTriggerEnter2D(Collider2D collider)
+        {
+            FortressController fortress = collider.GetComponent<FortressController>();
+            if (fortress)
+            {
+                State = new AttackState(anim, fortress, AttackInfo);
+                curPoint = points.Length;
             }
         }
     }

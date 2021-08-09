@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scrypts.Entity
 {
-    class LootController : MonoBehaviour
+    public class LootController : MonoBehaviour
     {
         [SerializeField] float velocity;
         [SerializeField] long valueToAdd;

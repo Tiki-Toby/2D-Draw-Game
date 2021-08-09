@@ -8,9 +8,15 @@ namespace Assets.Scrypts.UI
     public class UIManager : MonoBehaviour
     {
         [SerializeField] GameObject drawArea;
+        [SerializeField] GameObject blurPanel;
 
         List<PanelController> panels;
-        public string lastPanelName;
+        string lastPanelName;
+
+        public void SetLastPanelName(string name)
+        {
+            this.lastPanelName = name;
+        }
 
         public void AddPanel(PanelController panelPrefab)
         {
@@ -50,6 +56,7 @@ namespace Assets.Scrypts.UI
             {
                 panels[panels.Count - 1].RaycastController(true);
             }
+
         }
 
         private void Awake()
@@ -84,11 +91,13 @@ namespace Assets.Scrypts.UI
             {
                 Time.timeScale = 0;
                 drawArea.SetActive(false);
+                blurPanel.SetActive(true);
             }
             else
             {
                 Time.timeScale = 1;
                 drawArea.SetActive(true);
+                blurPanel.SetActive(false);
             }
         }
     }

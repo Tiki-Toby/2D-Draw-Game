@@ -17,15 +17,8 @@ namespace Assets.Scrypts.UI
                 GetComponent<Button>().onClick.AddListener(() =>
                 {
                     GameObject.FindObjectOfType<LevelManager>().ReloadLevel();
-                    DestroyActivePanel();
                     Profile.AddValut(-PanelControllData.DiamondForRepeatLevel, ValutType.Crystal);
                 });
-        }
-        void DestroyActivePanel()
-        {
-            GameObject[] panels = GameObject.FindGameObjectsWithTag("Panel");
-            foreach (GameObject obj in panels)
-                Destroy(obj);
         }
     }
 }

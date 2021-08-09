@@ -51,6 +51,7 @@ namespace Assets.Scrypts.Entity
             Vector2 preferendPoint = AlgoritmicPoint(EntityPosition, points);
 
             List<Vector2> path = new List<Vector2>();
+            Debug.Log(preferendPoint);
             while (snippets.ContainsKey(preferendPoint))
             {
                 path.Add(preferendPoint);
@@ -94,7 +95,7 @@ namespace Assets.Scrypts.Entity
         private Vector2 AlgoritmicPoint(Vector2 position, Vector2[] points)
         {
             float length, angle;//, distance;
-            Tuple<Vector2, float, float> preferendPoint = new Tuple<Vector2, float, float>(points[0], float.MaxValue, 180);
+            Tuple<Vector2, float, float> preferendPoint = new Tuple<Vector2, float, float>(Vector2.negativeInfinity, float.MaxValue, 180);
             foreach (Vector2 shelter in points)
                 foreach (Vector2 purpose in purposes)
                 {

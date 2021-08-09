@@ -29,7 +29,7 @@ namespace Assets.Scrypts.UI
 
         public void DestoySelfAndLoadNew(PanelController panel)
         {
-            manager.lastPanelName = this.gameObject.name;
+            manager.SetLastPanelName(this.gameObject.name);
             manager.AddPanel(panel);
             DestroySelf();
         }

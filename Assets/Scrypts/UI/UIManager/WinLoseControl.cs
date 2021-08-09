@@ -21,11 +21,13 @@ namespace Assets.Scrypts.UI
 
         void Win(int count)
         {
+            Debug.Log("Start");
             StartCoroutine(DelayOnStart(winPanel));
         }
 
         void Lose(int count)
         {
+            Debug.Log("Lose");
             StartCoroutine(DelayOnStart(losePanel));
         }
 

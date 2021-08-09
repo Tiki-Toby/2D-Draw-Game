@@ -7,10 +7,8 @@ namespace Assets.Scrypts.Enemy
 {
     class Spawner : MonoBehaviour
     {
-        [SerializeField] LevelEnemyManager enemyManager;
         [SerializeField] float depth;
         private List<UnitInfos> units;
-
 
         private Vector2 leftBottom, rightTop;
         void Start()
@@ -66,7 +64,7 @@ namespace Assets.Scrypts.Enemy
                     position.x = rightTop.x + UnityEngine.Random.Range(0, depth);
                     break;
             }
-            enemyManager.AddEnemy(Instantiate(unit.enemyPrefab, position, Quaternion.identity, transform));
+            GameManager.Instance.AddEnemy(Instantiate(unit.enemyPrefab, position, Quaternion.identity, transform));
         }
     }
 }

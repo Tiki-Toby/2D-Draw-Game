@@ -37,7 +37,7 @@ namespace Assets.Scrypts.GameData
     //класс с хранением, сохранением и обработкой данных игрока
     static class Profile
     {
-        private static ProfileData _profileData; 
+        private static ProfileData _profileData;
         public static ProfileData profileData { get => _profileData; }
         public static void AddValut(long value, ValutType valutType)
         {
@@ -56,12 +56,22 @@ namespace Assets.Scrypts.GameData
             if (_profileData.maxLvl < lvl)
                 _profileData.maxLvl = lvl;
         }
-        public static void SaveData() =>
-            PlayerPrefs.SetString("Save", JsonUtility.ToJson(_profileData));
+        public static void SaveData()
+        {
+            PlayerPrefs.SetFloat("Coins", _profileData.coin);
+            PlayerPrefs.SetFloat("Crystals", _profileData.crystal);
+            PlayerPrefs.SetInt("BestScore", _profileData.maxLvl);
+            PlayerPrefs.Save();
+        }
         public static void LoadData()
         {
-            if (PlayerPrefs.HasKey("Save"))
-                _profileData = JsonUtility.FromJson<ProfileData>(PlayerPrefs.GetString("Save"));
+            if (PlayerPrefs.HasKey("Coins"))
+            {
+                long coins = (long)PlayerPrefs.GetFloat("Coins");
+                long crystals = (long)PlayerPrefs.GetFloat("Crystals");
+                int maxLvl = PlayerPrefs.GetInt("BestScore");
+                _profileData = new ProfileData(coins, crystals, maxLvl);
+            }
             else
                 _profileData = new ProfileData(0, 10, 0);
         }

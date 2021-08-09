@@ -15,12 +15,13 @@ namespace Assets.Scrypts.LevelManagerSystem
         [SerializeField] PlayerAnimatorController playerAnimator;
         [SerializeField] LvlInfo lvlInfoOtputter;
         [SerializeField] Spawner spawner;
-        [SerializeField] LevelEnemyManager enemiesController;
         [SerializeField] DrawInput drawInput;
         private LevelPreset levelPreset;
 
         private LevelPreset NextLevel =>
-            Resources.Load<LevelPreset>($"Levels/Level{LevelData.levelData.currentLvl + 1}");
+            Resources.Load<LevelPreset>($"{Paths.LEVEL_PRESETS}Level{LevelData.levelData.currentLvl + 1}");
+        private LevelPreset FirstLevel =>
+            Resources.Load<LevelPreset>($"{Paths.LEVEL_PRESETS}Level1");
 
         private void Awake()
         {
@@ -42,11 +43,29 @@ namespace Assets.Scrypts.LevelManagerSystem
             if (levelPreset == null)
             {
                 LevelData.levelData.currentLvl = 1;
-                levelPreset = Resources.Load<LevelPreset>($"Levels/Level1");
+                levelPreset = FirstLevel;
             }
             LoadLevel();
         }
-        public void LoadLevel()
+        public void LoadFirstLevel()
+        {
+            LevelData.levelData.currentLvl = 1;
+
+            GameManager.Instance.SpawnForts();
+            levelPreset = FirstLevel;
+
+            LoadLevel();
+            LevelData.levelData.SetStartValutes();
+        }
+        //перезапуск прошлого состояния уровня
+        public void ReloadLevel()
+        {
+            GameManager.Instance.RespawnForts();
+            LevelData.levelData.ResetData();
+            levelPreset = Resources.Load<LevelPreset>($"{Paths.LEVEL_PRESETS}Level{LevelData.levelData.currentLvl}");
+            LoadLevel();
+        }
+        private void LoadLevel()
         {
             DeserializeLevel();
             Vector2[] points = levelPreset.SpawnShelters();
@@ -57,35 +76,14 @@ namespace Assets.Scrypts.LevelManagerSystem
             lvlInfoOtputter.OutputLvlInfo();
             spawner.InitUnitInfos(levelPreset.unitsInfos);
         }
-        public void LoadFirstLevel()
-        {
-            LevelData.levelData.currentLvl = 1;
-            DeserializeLevel();
-            GameObject[] forts = GameObject.FindGameObjectsWithTag("Fortress");
-            for (int i = 0; i < forts.Length; i++)
-                Destroy(forts[i]);
-
-            Instantiate(fortressPrefab, new Vector2(0, -2f), Quaternion.identity);
-            levelPreset = Resources.Load<LevelPreset>($"Levels/Level1");
-
-            LoadLevel();
-            LevelData.levelData.SetStartValutes();
-        }
-        //перезапуск прошлого состояния уровня
-        public void ReloadLevel()
-        {
-            LevelData.levelData.ResetLvl(fortressPrefab);
-            levelPreset = Resources.Load<LevelPreset>($"Levels/Level{LevelData.levelData.currentLvl}");
-            LoadLevel();
-        }
         //уничтожение укрытий и врагов
         private void DeserializeLevel()
         {
             playerAnimator.Reset();
-            GameObject shelters = GameObject.Find("Shelters");
 
-            enemiesController.DestroyAll();
+            GameObject shelters = GameObject.Find("Shelters");
             Destroy(shelters);
+            GameManager.Instance.DestroyAllEnemies();
 
             //прячем панель с инфоормацией об уровне
             lvlInfoOtputter.Destruct();
@@ -95,7 +93,7 @@ namespace Assets.Scrypts.LevelManagerSystem
             if(count == 0)
             {
                 playerAnimator.SetLose();
-                levelPreset = Resources.Load<LevelPreset>($"Levels/Level1");
+                levelPreset = FirstLevel;
                 drawInput.Clear();
                 Debug.Log("You Lose!");
             }

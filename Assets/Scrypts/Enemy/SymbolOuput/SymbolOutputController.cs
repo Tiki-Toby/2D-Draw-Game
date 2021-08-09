@@ -8,12 +8,14 @@ namespace Assets.Scrypts.Enemy
 {
     public abstract class SymbolOutputController : MonoBehaviour
     {
+        protected SymbolCloseType closeType;
         protected List<SpriteRenderer> sprites;
         protected float width;
 
         //создать последовательность символов
-        public void InitSymbolChain(string[] symbols)
+        public void InitSymbolChain(string[] symbols, SymbolCloseType closeType)
         {
+            this.closeType = closeType;
             sprites = new List<SpriteRenderer>();
             int size = symbols.Length;
             width = 0f;

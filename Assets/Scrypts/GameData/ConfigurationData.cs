@@ -3,25 +3,31 @@
     public class EnemyData
     {
         //расстояния до цели, чтобы защитать, что враг дошел
-        public static readonly float InaccuracyToTarget = 0.2f;
+        public const float InaccuracyToTarget = 0.2f;
         //время, которое враг прячется
-        public static readonly float TimeInHideState = 2f;
+        public const float TimeInHideState = 2f;
         //скэйл символов над врагом
-        public static readonly float SymbolIconScale = 0.05f;
+        public const float SymbolIconScale = 0.05f;
         //прозрачность символов, когда враг прячется
-        public static readonly float SymbolOnHideFadeTo = 0.2f;
+        public const float SymbolOnHideFadeTo = 0.2f;
         //время, которое символы затухают
-        public static readonly float TimeForHideSymbols = 0.5f;
+        public const float TimeForHideSymbols = 0.5f;
+        public const float ScaleSymbolByOrder = 1.5f;
     }
     public class PanelControllData
     {
         //время вывода панели в PanelAnim
-        public static readonly float TimePanelOutput = 1;
+        public const float TimePanelOutput = 1;
         //задержка вываода панели для победы/поражения
-        public static readonly float TimePanelSpawnDelay = 2.5f;
+        public const float TimePanelSpawnDelay = 2.5f;
         //время затухания панели с информацией об уровне
-        public static readonly float TimeLvlInfoFade = 5;
+        public const float TimeLvlInfoFade = 5;
         //кристалы для повторения уровней
-        public static readonly long DiamondForRepeatLevel = 5;
+        public const long DiamondForRepeatLevel = 5;
+    }
+    public class DrawParametrsData
+    {
+        public const float minScoreEnge = 0.8f;
+
     }
 }

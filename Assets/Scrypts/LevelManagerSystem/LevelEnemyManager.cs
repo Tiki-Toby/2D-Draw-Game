@@ -48,6 +48,7 @@ namespace Assets.Scrypts.LevelManagerSystem
                 }
                 else
                 {
+                    CalcPointerPosition(pointers[i], position);
                 }
             }
             //проверяет позицию врагов на внутри/вне экрана
@@ -97,23 +98,6 @@ namespace Assets.Scrypts.LevelManagerSystem
                     enemiesOutSide.RemoveAt(index);
                 }
             }
-            Destroy(enemy.gameObject);
-        }
-        public void DestroyAll()
-        {
-            int size = enemies.Count;
-            for(int i = 0; i < size; i++)
-                Destroy(enemies[i].gameObject);
-
-            size = enemiesOutSide.Count;
-            for(int i = 0; i < size; i++)
-            {
-                Destroy(enemiesOutSide[i].gameObject);
-                Destroy(pointers[i].gameObject);
-            }
-            enemies.Clear();
-            pointers.Clear();
-            enemiesOutSide.Clear();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Assets.Scrypts.Entity;
+using Assets.Scrypts.GameData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Assets.Scrypts.Enemy
         AttackData attackData;
         float timer;
 
-        public AttackState(Animator anim, FortressController fortress, AttackData attackData) : base(anim, "isAttack")
+        public AttackState(Animator anim, FortressController fortress, AttackData attackData) : base(anim, EnemyStateNames.ATTACK)
         {
             anim.GetBehaviour<ControllAttack>().attackDelay = attackData.AttackDelay;
             this.attackData = attackData;

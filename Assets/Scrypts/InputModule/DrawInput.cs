@@ -1,4 +1,5 @@
-﻿using Assets.Scrypts.LevelManagerSystem;
+﻿using Assets.Scrypts.GameData;
+using Assets.Scrypts.LevelManagerSystem;
 using PDollarGestureRecognizer;
 using System;
 using System.Collections.Generic;
@@ -61,8 +62,8 @@ namespace Assets.Scrypts.InputModule
 			Gesture candidate = new Gesture(points.ToArray());
 			Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
 			Debug.Log(gestureResult.Score);
-			if (gestureResult.Score > 0.8f)
-			{
+			if (gestureResult.Score > DrawParametrsData.minScoreEnge)
+			{	
 				symbol = gestureResult.GestureClass;
 				Debug.Log($"Bukva: {symbol} with {gestureResult.Score}");
 				OnSymbolInput();

@@ -58,7 +58,7 @@ namespace Assets.Scrypts.Enemy
             }
             InitTakeDamage(closeType);
 
-            symbolOutputter.InitSymbolChain(hpSymbols.ToArray());
+            symbolOutputter.InitSymbolChain(hpSymbols.ToArray(), closeType);
         }
         public bool isTakeDamage(string c) => onTakeDamage.Invoke(c);
         public void SwitchHide()
@@ -78,12 +78,7 @@ namespace Assets.Scrypts.Enemy
             {
                 case SymbolCloseType.AnyOrder:
                     onTakeDamage = (string c) =>
-                    {
-                        if (hpSymbols.Contains(c))
-                            return OnTakeDamage(c, hpSymbols.IndexOf(c));
-                        else
-                            return false;
-                    };
+                        OnTakeDamage(c, hpSymbols.IndexOf(c));
                     break;
                 case SymbolCloseType.Left:
                     onTakeDamage = (string c) =>
@@ -97,6 +92,9 @@ namespace Assets.Scrypts.Enemy
         }
         private bool OnTakeDamage(string c, int index)
         {
+            if (index < 0)
+                return false;
+
             bool isDamage = hpSymbols[index] == c && !isHide;
             if (isDamage)
             {
