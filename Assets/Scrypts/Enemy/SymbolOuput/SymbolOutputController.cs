@@ -12,7 +12,7 @@ namespace Assets.Scrypts.Enemy
         protected List<SpriteRenderer> sprites;
         protected float width;
 
-        //создать последовательность символов
+        //СЃРѕР·РґР°С‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ
         public void InitSymbolChain(string[] symbols, SymbolCloseType closeType)
         {
             this.closeType = closeType;
@@ -34,7 +34,7 @@ namespace Assets.Scrypts.Enemy
             sprites.RemoveAt(index);
             AlignSprites();
         }
-        //прячем все символы
+        //РїСЂВ¤С‡РµРј РІСЃРµ СЃРёРјРІРѕР»С‹
         public void HideSymbols(bool isNeedHide = true)
         {
             if (isNeedHide)
@@ -50,7 +50,7 @@ namespace Assets.Scrypts.Enemy
                     sprites[i].DOFade(1, EnemyData.TimeForHideSymbols);
                 }
         }
-        //создаем символ
+        //СЃРѕР·РґР°РµРј СЃРёРјРІРѕР»
         protected SpriteRenderer CreateSpriteObject(Sprite sprite)
         {
             SpriteRenderer spriteRenderer = new GameObject("Symbol").AddComponent<SpriteRenderer>();
@@ -60,7 +60,7 @@ namespace Assets.Scrypts.Enemy
             sprites.Add(spriteRenderer);
             return spriteRenderer;
         }
-        //добавить символ
+        //РґРѕР±Р°РІРёС‚СЊ СЃРёРјРІРѕР»
         public void AddSymbol(string symbolSpriteName, SymbolCloseType addType = SymbolCloseType.Right) =>
             AddSymbol(LevelData.levelData.GetSpriteOf(symbolSpriteName), addType);
         public void AddSymbol(Sprite symbolSprite, SymbolCloseType addType = SymbolCloseType.Right)
@@ -75,8 +75,8 @@ namespace Assets.Scrypts.Enemy
                 CreateSpriteObject(symbolSprite);
             AlignSprites();
         }
-        //уничтожаем символ по индексу
-        //смещает все спрайты к индексу
+        //СѓРЅРёС‡С‚РѕР¶Р°РµРј СЃРёРјРІРѕР» РїРѕ РёРЅРґРµРєСЃСѓ
+        //СЃРјРµС‰Р°РµС‚ РІСЃРµ СЃРїСЂР°Р№С‚С‹ Рє РёРЅРґРµРєСЃСѓ
         protected abstract void AlignSprites();
     }
 }

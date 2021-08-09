@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +26,12 @@ namespace Assets.Scrypts.AdsNew
             activeAd = 0;
             _instance = this;
             providers = new List<IAdsProvider>();
-#if UNITY_EDITOR
             providers.Add(new MockAd());
-#else
-            //инит провайдеров рекламы
-#endif
+            //#if UNITY_EDITOR
+            //            providers.Add(new MockAd());
+            //#else
+            //            //инит провайдеров рекламы
+            //#endif
         }
         public void LoadRewardedVideo(GameObject adButton)
         {

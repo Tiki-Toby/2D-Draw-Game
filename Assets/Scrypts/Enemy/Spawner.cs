@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.LevelManagerSystem;
+using Assets.Scrypts.LevelManagerSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

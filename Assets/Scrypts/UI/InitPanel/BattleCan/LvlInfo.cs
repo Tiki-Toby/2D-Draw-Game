@@ -33,18 +33,18 @@ namespace Assets.Scrypts.UI
         }
         public void AnimatFade()
         {
-            for (int i = 0; i < 3; i++)
+            Text[] texts = transform.GetComponentsInChildren<Text>();
+            foreach (Text text in texts)
             {
-                Text text = transform.GetChild(i).GetComponent<Text>();
                 text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
                 text.DOFade(0, PanelControllData.TimeLvlInfoFade);
             }
         }
         public void Destruct()
         {
-            for (int i = 0; i < 3; i++)
+            Text[] texts = transform.GetComponentsInChildren<Text>();
+            foreach (Text text in texts)
             {
-                Text text = transform.GetChild(i).GetComponent<Text>();
                 text.DOKill();
             }
         }

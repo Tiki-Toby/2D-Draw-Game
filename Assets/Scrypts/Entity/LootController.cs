@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.LevelManagerSystem;
+using Assets.Scrypts.LevelManagerSystem;
 using DG.Tweening;
 using UnityEngine;
 

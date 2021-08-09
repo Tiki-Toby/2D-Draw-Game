@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.Enemy;
+using Assets.Scrypts.Enemy;
 using Assets.Scrypts.Entity;
 using System;
 using System.Collections.Generic;

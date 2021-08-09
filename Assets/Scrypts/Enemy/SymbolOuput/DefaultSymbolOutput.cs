@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.GameData;
+using Assets.Scrypts.GameData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

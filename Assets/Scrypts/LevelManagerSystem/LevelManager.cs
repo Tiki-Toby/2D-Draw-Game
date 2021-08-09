@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.Enemy;
+using Assets.Scrypts.Enemy;
 using Assets.Scrypts.Entity;
 using Assets.Scrypts.GameData;
 using Assets.Scrypts.InputModule;
@@ -30,6 +30,7 @@ namespace Assets.Scrypts.LevelManagerSystem
             //создаем данные уровня
             LevelData.InitData();
 
+            InputBehaviour.Subscribe((string _) => playerAnimator.SetAttack());
             //подписка на победу и поражение
             LevelData.levelData.fortressCount.Where(x => x == 0).Subscribe(OnLose);
             LevelData.levelData.enemyCount.Where(x => x == 0).Subscribe(OnWin);

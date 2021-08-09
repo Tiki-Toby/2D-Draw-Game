@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.GameData;
+using Assets.Scrypts.GameData;
 using UnityEngine;
 
 namespace Assets.Scrypts.Enemy

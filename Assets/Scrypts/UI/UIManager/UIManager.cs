@@ -7,20 +7,17 @@ namespace Assets.Scrypts.UI
 {
     public class UIManager : MonoBehaviour
     {
-        [SerializeField] GameObject drawArea;
+        private static UIManager _instance;
+        public static UIManager Instance => _instance;
+
+        [SerializeField] Image drawArea;
         [SerializeField] GameObject blurPanel;
 
         List<PanelController> panels;
-        string lastPanelName;
-
-        public void SetLastPanelName(string name)
-        {
-            this.lastPanelName = name;
-        }
 
         public void AddPanel(PanelController panelPrefab)
         {
-            Debug.Log(lastPanelName);
+
             if (panels.Count == 0)
             {
                 SpawnPanel(panelPrefab);
@@ -30,17 +27,14 @@ namespace Assets.Scrypts.UI
             {
                 foreach (PanelController panel in panels)
                 {
-                    if ((panelPrefab.gameObject.name == panel.gameObject.name) || (panelPrefab.gameObject.name == lastPanelName))
+                    if (panelPrefab.gameObject.name == panel.gameObject.name)
                     {
                         return;
                     }
                 }
 
-                panels[panels.Count - 1].RaycastController(false);
                 SpawnPanel(panelPrefab);
             }
-
-            panels[panels.Count - 1].SetManager(this);
         }
 
         public void DeletePanel(PanelController panel)
@@ -52,25 +46,17 @@ namespace Assets.Scrypts.UI
             {
                 SetPause(false);
             }
-            else
-            {
-                panels[panels.Count - 1].RaycastController(true);
-            }
-
         }
 
         private void Awake()
         {
             panels = new List<PanelController>();
+            _instance = this;
 
-            GameObject[] activePanels = GameObject.FindGameObjectsWithTag("Panel");
+            PanelController[] activePanels = GameObject.FindObjectsOfType<PanelController>();
             for (int i = 0; i < activePanels.Length; i++)
-            {
-                panels.Add(activePanels[i].GetComponent<PanelController>());
-                panels[i].SetManager(this);
-            }
-
-            Debug.Log(panels);
+                panels.Add(activePanels[i]);
+            SetPause(panels.Count > 0);
         }
 
         private void SpawnPanel(PanelController panelPrefab)
@@ -90,13 +76,13 @@ namespace Assets.Scrypts.UI
             if (key)
             {
                 Time.timeScale = 0;
-                drawArea.SetActive(false);
+                drawArea.raycastTarget = false;
                 blurPanel.SetActive(true);
             }
             else
             {
                 Time.timeScale = 1;
-                drawArea.SetActive(true);
+                drawArea.raycastTarget = true;
                 blurPanel.SetActive(false);
             }
         }

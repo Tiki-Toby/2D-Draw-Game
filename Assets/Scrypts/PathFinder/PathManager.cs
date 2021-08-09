@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,20 +68,35 @@ namespace Assets.Scrypts.Entity
             for (int i = 0; i < fortresses.Length; i++)
                 purposes.Add(fortresses[i].transform.position);
 
-            for(int i = 0; i < shelters.Length; i++)
-                for(int j = i; j < shelters.Length; j++) 
-                    if(shelters[i].y < shelters[j].y)
+            List<Vector2> sheltersTmp = new List<Vector2>(shelters);
+            for(int i = 0; i < sheltersTmp.Count; i++)
+                for(int j = i; j < sheltersTmp.Count; j++)
+                {
+                    if (shelters[i].y < shelters[j].y)
                     {
                         Vector2 tmp = shelters[i];
                         shelters[i] = shelters[j];
                         shelters[j] = tmp;
                     }
+                } 
+                    
 
             snippets.Clear();
             foreach (Vector2 currentShelter in shelters)
             {
                 if (snippets.ContainsKey(currentShelter))
                     continue;
+
+                bool isIn = false;
+                foreach (Vector2 purpose in purposes)
+                    if (currentShelter == purpose)
+                    {
+                        isIn = true;
+                        break;
+                    }
+                if (isIn)
+                    continue;
+
                 snippets.Add(currentShelter, AlgoritmicPoint(currentShelter, shelters));
             }
         }

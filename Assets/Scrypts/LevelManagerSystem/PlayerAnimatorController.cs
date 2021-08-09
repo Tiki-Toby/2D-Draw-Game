@@ -11,18 +11,13 @@ namespace Assets.Scrypts.Enemy
     {
         [SerializeField] Animator anim;
 
-        private void Start()
-        {
-            InputBehaviour.Subscribe((string _) => SetAttack());
-        }
-
-        //ñîáûòèå â DrawInput
-        //èãðîê ââåë íåâåðíûé ñèìâîë
+        //ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ Ð² DrawInput
+        //Ð¸Ð³Ñ€Ð¾Ðº Ð²Ð²ÐµÐ» Ð½ÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ ÑÐ¸Ð¼Ð²Ð¾Ð»
         public void SetMistake() =>
             anim.SetTrigger(PlayerStateNames.MISTAKE);
 
-        //÷åðåç ïîäïèñêó íà âåðíûé ââîä
-        //èãðîê ââåë âåðíûé ñèìâîë
+        //Ñ‡ÐµÑ€ÐµÐ· Ð¿Ð¾Ð´Ð¿Ð¸ÑÐºÑƒ Ð½Ð° Ð²ÐµÑ€Ð½Ñ‹Ð¹ Ð²Ð²Ð¾Ð´
+        //Ð¸Ð³Ñ€Ð¾Ðº Ð²Ð²ÐµÐ» Ð²ÐµÑ€Ð½Ñ‹Ð¹ ÑÐ¸Ð¼Ð²Ð¾Ð»
         public void SetAttack() =>
             anim.SetTrigger(PlayerStateNames.ATTACK);
 
@@ -34,11 +29,11 @@ namespace Assets.Scrypts.Enemy
             anim.ResetTrigger(PlayerStateNames.ATTACK);
         }
 
-        //îáðàáàòûâàåòñÿ â LevelManager
-        //âñå âðàãè ïîáåæäåííû
+        //Ð¾Ð±Ñ€Ð°Ð±Ð°Ñ‚Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ð² LevelManager
+        //Ð²ÑÐµ Ð²Ñ€Ð°Ð³Ð¸ Ð¿Ð¾Ð±ÐµÐ¶Ð´ÐµÐ½Ð½Ñ‹
         public void SetVictory() =>
             anim.SetBool(PlayerStateNames.SELEBRATE, true);
-        //âñå âëàäåíèÿ ðàçðóøåíû
+        //Ð²ÑÐµ Ð²Ð»Ð°Ð´ÐµÐ½Ð¸Ñ Ñ€Ð°Ð·Ñ€ÑƒÑˆÐµÐ½Ñ‹
         public void SetLose() =>
             anim.SetBool(PlayerStateNames.LOSE, true);
 

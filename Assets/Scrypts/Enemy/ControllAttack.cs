@@ -7,7 +7,7 @@ public class ControllAttack : StateMachineBehaviour
     public float attackDelay;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //выставляет нужную скорость анимации
+        //РІС‹СЃС‚Р°РІР»СЏРµС‚ РЅСѓР¶РЅСѓСЋ СЃРєРѕСЂРѕСЃС‚СЊ Р°РЅРёРјР°С†РёРё
         if (attackDelay < stateInfo.length)
             animator.SetFloat("AttackSpeed", stateInfo.length / attackDelay);
     }

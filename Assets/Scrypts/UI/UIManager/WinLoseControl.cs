@@ -9,9 +9,8 @@ namespace Assets.Scrypts.UI
 {
     public class WinLoseControl : MonoBehaviour
     {
-        [SerializeField] GameObject winPanel;
-        [SerializeField] GameObject losePanel;
-        [SerializeField] UIManager manager;
+        [SerializeField] PanelController winPanel;
+        [SerializeField] PanelController losePanel;
 
         void Start()
         {
@@ -31,12 +30,10 @@ namespace Assets.Scrypts.UI
             StartCoroutine(DelayOnStart(losePanel));
         }
 
-        IEnumerator DelayOnStart(GameObject panel)
+        IEnumerator DelayOnStart(PanelController panelPrefab)
         {
             yield return new WaitForSeconds(PanelControllData.TimePanelSpawnDelay);
-
-            PanelController pane = panel.GetComponent<PanelController>();
-            manager.AddPanel(pane);
+            UIManager.Instance.AddPanel(panelPrefab);
         }
     }
 }

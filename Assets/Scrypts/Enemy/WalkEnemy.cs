@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.Entity;
+using Assets.Scrypts.Entity;
 using Assets.Scrypts.GameData;
 using Assets.Scrypts.LevelManagerSystem;
 using UniRx;

@@ -1,4 +1,4 @@
-﻿namespace Assets.Scrypts.GameData
+namespace Assets.Scrypts.GameData
 {
     public class EnemyData
     {

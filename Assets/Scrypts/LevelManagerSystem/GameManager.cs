@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.Enemy;
+using Assets.Scrypts.Enemy;
 using Assets.Scrypts.Entity;
 using Assets.Scrypts.InputModule;
 using System;
@@ -45,14 +45,18 @@ namespace Assets.Scrypts.LevelManagerSystem
             {
                 FortressController fort = Instantiate(fortPrefab);
                 LevelData.levelData.lvlStateOnStart.fortDatas[i].InitFortress(fort);
+                forts.Add(fort);
             }
         }
         public void DestroyFortress(FortressController fort)
         {
-            LevelData.levelData.fortressCount.Value--;
-            PathManager.pathManager.DestroyFortress(fort.transform.position);
-            forts.Remove(fort);
-            Destroy(fort.gameObject);
+            if (LevelData.levelData.enemyCount.Value > 0)
+            {
+                LevelData.levelData.fortressCount.Value--;
+                PathManager.pathManager.DestroyFortress(fort.transform.position);
+                forts.Remove(fort);
+                Destroy(fort.gameObject);
+            }
         }
         private void CleanFortress()
         {
@@ -72,8 +76,10 @@ namespace Assets.Scrypts.LevelManagerSystem
         }
         public void KillEnemy(EnemyController enemy)
         {
-            LevelData.levelData.enemyCount.Value--;
+            if(LevelData.levelData.fortressCount.Value > 0)
+                LevelData.levelData.enemyCount.Value--;
             SpawnLoot(enemy);
+            enemyManager.OnDestroyEnemy(enemy);
         }
         public void DestroyEnemy(EnemyController enemy)
         {

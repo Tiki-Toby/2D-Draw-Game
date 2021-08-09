@@ -1,4 +1,4 @@
-﻿using Assets.Scrypts.GameData;
+using Assets.Scrypts.GameData;
 using Assets.Scrypts.LevelManagerSystem;
 using System;
 using System.Collections.Generic;
