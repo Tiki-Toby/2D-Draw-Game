@@ -59,7 +59,6 @@ namespace Assets.Scrypts.Enemy
         }
         //Задаются следующие состояния, по завершению предыдущего
         protected abstract void StateMachine();
-        public abstract void UpdateTargets();
 
         //Обработка введенного символа
         public void TakeDamage(string c)

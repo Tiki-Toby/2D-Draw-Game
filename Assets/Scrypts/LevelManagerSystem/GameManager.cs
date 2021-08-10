@@ -56,9 +56,6 @@ namespace Assets.Scrypts.LevelManagerSystem
                 PathManager.pathManager.DestroyFortress(fort.transform.position);
                 forts.Remove(fort);
                 Destroy(fort.gameObject);
-
-                foreach (EnemyController enemy in enemies)
-                    enemy.UpdateTargets();
             }
         }
         private void CleanFortress()
@@ -82,9 +79,13 @@ namespace Assets.Scrypts.LevelManagerSystem
             if (LevelData.levelData.fortressCount.Value > 0)
                 LevelData.levelData.enemyCount.Value--;
             SpawnLoot(enemy);
-
+            enemyManager.OnDestroyEnemy(enemy);
+        }
+        public void DestroyEnemy(EnemyController enemy)
+        {
             enemies.Remove(enemy);
             enemyManager.OnDestroyEnemy(enemy);
+            Destroy(enemy.gameObject);
         }
         public void DestroyAllEnemies()
         {
@@ -121,10 +122,6 @@ namespace Assets.Scrypts.LevelManagerSystem
         {
             _instance = GameObject.FindObjectOfType<GameManager>();
             InputBehaviour.UnSubscribe(HeatEnemy);
-        }
-        private void Update()
-        {
-            Debug.Log(LevelData.levelData.fortressCount.Value);
         }
     }
 }
