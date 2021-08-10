@@ -58,6 +58,7 @@ namespace Assets.Scrypts.GameData
         }
         public static void SaveData()
         {
+            //PlayerPrefs.SetFloat("Coins", _profileData.coin);
             PlayerPrefs.SetString("Coins", _profileData.coin.ToString());
             PlayerPrefs.SetString("Crystals", _profileData.crystal.ToString());
             PlayerPrefs.SetInt("BestScore", _profileData.maxLvl);
@@ -68,6 +69,7 @@ namespace Assets.Scrypts.GameData
             if (PlayerPrefs.HasKey("Coins"))
             {
                 long coins = long.Parse(PlayerPrefs.GetString("Coins"));
+                //long coins = (long)PlayerPrefs.GetFloat("Coins");
                 long crystals = long.Parse(PlayerPrefs.GetString("Crystals"));
                 int maxLvl = PlayerPrefs.GetInt("BestScore");
                 _profileData = new ProfileData(coins, crystals, maxLvl);

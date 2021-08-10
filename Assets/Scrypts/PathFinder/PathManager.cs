@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scrypts.LevelManagerSystem;
 
 namespace Assets.Scrypts.Entity
 {
@@ -63,7 +64,7 @@ namespace Assets.Scrypts.Entity
         //создаем список связей
         public void CreateNodeList(Vector2[] shelters)
         {
-            GameObject[] fortresses = GameObject.FindGameObjectsWithTag("Fortress");
+            FortressController[] fortresses = GameManager.Instance.Forts;
             purposes = new List<Vector2>();
             for (int i = 0; i < fortresses.Length; i++)
                 purposes.Add(fortresses[i].transform.position);

@@ -133,13 +133,11 @@ namespace Assets.Scrypts.LevelManagerSystem
             for (int i = 0; i < symbols.Length; i++)
                 symbols[i] = symbols[i].ToLower();
 
-            foreach (ValutType valutType in Enum.GetValues(typeof(ValutType)))
-                lvlValutes[(int)valutType].Value = 0;
-
+            ResetData();
             lvlStateOnStart = new LvlStateOnStart(GameManager.Instance.Forts);
 
             enemyCount.Value = levelPreset.unitsInfos.Length;
-            fortressCount.Value = PathManager.pathManager.GetFortress().Length;
+            fortressCount.Value = GameManager.Instance.Forts.Length;
         }
         public void ResetData()
         {

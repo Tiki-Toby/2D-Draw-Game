@@ -4,11 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scrypts.UI
 {
     public class WinLoseControl : MonoBehaviour
     {
+        [SerializeField] Image pauseButton;
         [SerializeField] PanelController winPanel;
         [SerializeField] PanelController losePanel;
 
@@ -17,24 +19,20 @@ namespace Assets.Scrypts.UI
             LevelData.levelData.enemyCount.Where(x => x == 0).Subscribe(Win);
             LevelData.levelData.fortressCount.Where(x => x == 0).Subscribe(Lose);
         }
-
-        void Win(int count)
-        {
-            Debug.Log("Start");
+        
+        void Win(int count) =>
             StartCoroutine(DelayOnStart(winPanel));
-        }
 
-        void Lose(int count)
-        {
-            Debug.Log("Lose");
+        void Lose(int count) =>
             StartCoroutine(DelayOnStart(losePanel));
-        }
 
         IEnumerator DelayOnStart(PanelController panelPrefab)
         {
+            UIManager.Instance.Blur();
             yield return new WaitForSeconds(PanelControllData.TimePanelSpawnDelay);
             UIManager.Instance.AddPanel(panelPrefab);
         }
+
     }
 }
 

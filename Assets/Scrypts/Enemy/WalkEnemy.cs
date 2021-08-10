@@ -22,39 +22,14 @@ namespace Assets.Scrypts.Enemy
         private void Start()
         {
             spawnPoint = _transform.position;
-            LevelData.levelData.fortressCount.ObserveEveryValueChanged(x => x.Value)
-                .Subscribe((int count) =>
-                {
-                    if (count > 0)
-                    {
-                        switch (walkType)
-                        {
-                            case WalkType.Linear:
-                                points = new Vector2[1];
-                                points[0] = PathManager.pathManager.ClosestFortress(transform.position);
-                                break;
-                            case WalkType.Hidden:
-                                points = PathManager.pathManager.SearchPath(transform.position);
-                                break;
-                        }
-                        if (!(State is AttackState))
-                        {
-                            State = new WalkToTargetState(anim, _transform, points[0], velocity);
-                            State.Subscribe(() => curPoint++);
-                            curPoint = 0;
-                        }
-                    }
-                    else
-                        EnemyWin();
-                })
-                .AddTo(this);
+            UpdateTargets();
         }
         private void EnemyWin()
         {
             anim.SetBool(EnemyStateNames.SELEBRATE, true);
             HpStruct.SwitchHide();
             State = new WalkToTargetState(anim, transform, spawnPoint, velocity * 1.5f);
-            State.Subscribe(() => GameManager.Instance.DestroyEnemy(this));
+            State.Subscribe(() => Destroy(gameObject));
         }
         protected override void StateMachine()
         {
@@ -89,7 +64,7 @@ namespace Assets.Scrypts.Enemy
             else
             {
                 State = new WalkToTargetState(anim, _transform, spawnPoint, velocity * 2);
-                State.Subscribe(() => GameManager.Instance.DestroyEnemy(this));
+                State.Subscribe(() => Destroy(gameObject));
             }
         }
         //тригер на атаку владения
@@ -101,6 +76,31 @@ namespace Assets.Scrypts.Enemy
                 State = new AttackState(anim, fortress, AttackInfo);
                 curPoint = points.Length;
             }
+        }
+
+        public override void UpdateTargets()
+        {
+            if (LevelData.levelData.fortressCount.Value > 0)
+            {
+                switch (walkType)
+                {
+                    case WalkType.Linear:
+                        points = new Vector2[1];
+                        points[0] = PathManager.pathManager.ClosestFortress(transform.position);
+                        break;
+                    case WalkType.Hidden:
+                        points = PathManager.pathManager.SearchPath(transform.position);
+                        break;
+                }
+                if (!(State is AttackState))
+                {
+                    State = new WalkToTargetState(anim, _transform, points[0], velocity);
+                    State.Subscribe(() => curPoint++);
+                    curPoint = 0;
+                }
+            }
+            else
+                EnemyWin();
         }
     }
 }

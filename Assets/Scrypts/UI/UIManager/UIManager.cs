@@ -1,7 +1,11 @@
+using Assets.Scrypts.LevelManagerSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
+using DG.Tweening;
 using UnityEngine.UI;
+using Assets.Scrypts.GameData;
 
 namespace Assets.Scrypts.UI
 {
@@ -17,24 +21,22 @@ namespace Assets.Scrypts.UI
 
         public void AddPanel(PanelController panelPrefab)
         {
-
             if (panels.Count == 0)
-            {
-                SpawnPanel(panelPrefab);
                 SetPause(true);
-            }
             else
-            {
                 foreach (PanelController panel in panels)
-                {
                     if (panelPrefab.gameObject.name == panel.gameObject.name)
-                    {
                         return;
-                    }
-                }
 
-                SpawnPanel(panelPrefab);
-            }
+            SpawnPanel(panelPrefab);
+        }
+        public void Blur()
+        {
+            blurPanel.SetActive(true);
+            Image blurImage = blurPanel.GetComponent<Image>();
+            Color color = blurImage.color;
+            blurImage.color = new Color(color.r, color.g, color.b, 0);
+            blurImage.DOFade(0.4f, PanelControllData.TimePanelSpawnDelay).SetEase(Ease.InQuint);
         }
 
         public void DeletePanel(PanelController panel)
